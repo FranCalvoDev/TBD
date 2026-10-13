@@ -1,0 +1,22 @@
+/* Plan de contenido y tips */
+/* Month plan */
+.month{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.wk{background:var(--surface);border-radius:16px;padding:18px;border-top:5px solid var(--c-contenido)}
+.wk .wn{font-family:var(--display);font-weight:800;font-size:2.2rem;line-height:1;color:var(--c-contenido)}
+.wk h3{font-family:var(--display);font-size:1.12rem;margin:8px 0 6px;line-height:1.25}
+.wk p{margin:0 0 6px;font-size:.93rem;color:var(--ink-2)}
+.wk p b{color:var(--ink)}
+
+/* Tips */
+.tips{display:flex;flex-direction:column;gap:10px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:16px;border-left:6px solid var(--cat)}
+summary{cursor:pointer;padding:16px 18px;font-family:var(--display);font-weight:700;font-size:1.15rem;list-style:none;display:flex;justify-content:space-between;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:1.4rem;line-height:1;color:var(--cat)}
+details[open] summary::after{content:"–"}
+.tip-body{padding:0 20px 18px;max-width:78ch}
+.tip-body h4{font-size:1rem;margin:16px 0 4px;color:var(--cat)}
+.tip-body p{margin:0 0 10px}
+.tip-body ul{margin:0 0 10px;padding-left:20px}
+.tip-body li{margin-bottom:6px}
+

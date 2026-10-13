@@ -1,0 +1,19 @@
+/* Metas */
+/* Goals */
+.goals{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.goal{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+.goal .gl{font-weight:700;margin:0}
+.goal .gc{font-size:.85rem;color:var(--cat);font-weight:700}
+.goal .row{display:flex;align-items:center;gap:10px;margin-top:10px}
+.goal .num{font-family:var(--display);font-weight:800;font-size:2rem;min-width:70px}
+.goal .num small{font-size:1rem;color:var(--ink-2);font-weight:500}
+.goal button{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);cursor:pointer;font-size:1.2rem;font-weight:700}
+.goal .gb{height:6px;border-radius:9px;background:var(--surface-2);margin-top:10px;overflow:hidden}
+.goal .gb span{display:block;height:100%;background:var(--cat);width:0;transition:width .3s}
+
+/* metas en edición */
+.goal .edit-in{width:100%;padding:7px 9px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font:inherit;margin-top:6px}
+.goal .edit-row{display:flex;gap:8px;margin-top:6px}
+.goal .edit-row input{width:80px}
+.goal.new{display:flex;align-items:center;justify-content:center;border-style:dashed;cursor:pointer;font-weight:700;color:var(--ink-2);min-height:120px;background:none}
+.goals-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
