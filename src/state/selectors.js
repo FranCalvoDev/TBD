@@ -1,0 +1,43 @@
+// Lecturas derivadas del store. Se recalculan solo cuando cambia store.version.
+import { toMin, currentWeekKey } from "../core/time.js";
+import { computePlanned } from "../domain/schedule.js";
+
+const EMPTY_WEEK = Object.freeze({done:{}, off:{}, goals:{}});
+const byStart = (a, b) => toMin(a.s) - toMin(b.s);
+
+export function createSelectors(store){
+  let seen = -1, cache = null;
+  const memo = () => {
+    if (seen !== store.version) {
+      seen = store.version;
+      const byDay = [[], [], [], [], [], [], []];
+      store.list("blocks").forEach(x => byDay[x.day]?.push(x));
+      byDay.forEach(d => d.sort(byStart));
+      cache = {
+        byDay,
+        planned: computePlanned(byDay.flat()),
+        goals: store.list("goals").sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
+        tasks: store.list("tasks"),
+        weeks: store.list("weeks").sort((a, b) => a.id < b.id ? -1 : 1)
+      };
+    }
+    return cache;
+  };
+
+  const sel = {
+    curKey: () => currentWeekKey(),
+    blocksOf: day => memo().byDay[day] || [],
+    block: id => store.get("blocks", id),
+    planned: () => memo().planned,
+    goals: () => memo().goals,
+    tasks: () => memo().tasks,
+    task: id => store.get("tasks", id),
+    weeks: () => memo().weeks,
+    week: key => store.get("weeks", key) || EMPTY_WEEK,
+    curWeek: () => sel.week(sel.curKey()),
+    hasWeek: key => !!store.get("weeks", key),
+    tasksAt: (week, day, includeDone = false) =>
+      memo().tasks.filter(t => t.slot && t.slot.week === week && t.slot.day === day && (includeDone || !t.done))
+  };
+  return sel;
+}

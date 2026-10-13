@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La semana de Francisco</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1>La semana de Francisco</h1>
+    <div class="top-right">
+      <span class="sync" id="sync">Cargando</span>
+      <button class="theme-btn" id="themeBtn" type="button">Cambiar tema</button>
+    </div>
+  </div>
+
+  <div class="hero" id="hero" aria-live="polite">
+    <p class="when" id="heroWhen"></p>
+    <p class="now" id="heroNow"></p>
+    <p class="meta" id="heroMeta"></p>
+    <div class="bar" id="heroBar"><span></span></div>
+    <p class="next" id="heroNext"></p>
+  </div>
+
+  <section style="margin-top:0">
+    <h2>Semana tipo</h2>
+    <p class="sub">Toca un bloque para ver sus tips, marcarlo como hecho o editarlo. Toca una categoría para resaltarla.</p>
+    <div class="legend" id="legend"></div>
+    <div class="legend-actions">
+      <button class="add-btn" id="addBlock" type="button">+ Agregar bloque</button>
+      <button class="link-btn" id="showAll" type="button">Mostrar todas</button>
+      <button class="link-btn" id="resetWeek" type="button">Reiniciar la semana</button>
+      <button class="link-btn" id="restore" type="button">Restaurar rutina original</button>
+    </div>
+    <div class="grid-scroll"><div class="week" id="week"></div></div>
+    <div class="mobile">
+      <div class="tabs" id="tabs" role="tablist"></div>
+      <div class="list" id="list"></div>
+    </div>
+  </section>
+
+  <section id="tareas">
+    <div class="goals-head">
+      <h2>Tareas</h2>
+      <button class="add-btn" id="addTask" type="button">+ Nueva tarea</button>
+    </div>
+    <p class="sub" id="taskSum"></p>
+    <div class="tasks" id="taskList"></div>
+    <details id="doneTasks" class="done-box" style="--cat:var(--c-proyectos)" hidden><summary>Completadas</summary><div class="tasks tip-body" id="doneList"></div></details>
+  </section>
+
+  <section>
+    <div class="goals-head">
+      <h2>Metas de la semana</h2>
+      <button class="link-btn" id="editGoals" type="button">Editar metas</button>
+    </div>
+    <p class="sub">Suma cada vez que cumples una. Cada lunes empieza una semana nueva y la anterior queda en tus estadísticas.</p>
+    <div class="goals" id="goals"></div>
+  </section>
+
+  <section>
+    <h2>Estadísticas</h2>
+    <p class="sub" id="statsSub">Se calculan con todo lo que marcas y sumas, semana a semana.</p>
+    <div id="stats"></div>
+  </section>
+
+  <section>
+    <h2>Primer mes de contenido</h2>
+    <p class="sub">Una pieza principal por semana, reutilizada en cortos, LinkedIn y Reddit.</p>
+    <div class="month" id="month"></div>
+  </section>
+
+  <section>
+    <h2>Tips</h2>
+    <p class="sub">Todo lo que hablamos, ordenado por área.</p>
+    <div class="tips" id="tips"></div>
+  </section>
+
+  <footer id="foot">Te levantas a las 8:30 y te acuestas a las 00:30, todos los días.</footer>
+</div>
+
+<dialog id="dlg">
+  <div class="dlg-head"><div class="dc" id="dCat"></div><h3 id="dTitle"></h3><div class="dt" id="dTime"></div></div>
+  <div class="dlg-body" id="dBody"></div>
+  <div class="dlg-foot">
+    <button class="btn ghost" id="dEdit" type="button">Editar</button>
+    <button class="btn ghost" id="dSkip" type="button">Dar de baja esta semana</button>
+    <span class="spacer"></span>
+    <button class="btn" id="dClose" type="button">Cerrar</button>
+    <button class="btn primary" id="dDone" type="button">Marcar como hecho</button>
+  </div>
+</dialog>
+
+<dialog id="edit">
+  <div class="dlg-head"><div class="dc" id="eCat">Bloque</div><h3 id="eTitle">Editar bloque</h3></div>
+  <div class="dlg-body form">
+    <label>Título<input id="fTitle" maxlength="60" autocomplete="off"></label>
+    <div class="two">
+      <label>Día<select id="fDay"></select></label>
+      <label>Categoría<select id="fCat"></select></label>
+    </div>
+    <div class="two">
+      <label>Empieza<input type="time" id="fS" step="300"></label>
+      <label>Termina<input type="time" id="fE" step="300"></label>
+    </div>
+    <label>Descripción<input id="fP" maxlength="200" autocomplete="off"></label>
+    <label>Tips (uno por línea)<textarea id="fL" rows="4"></textarea></label>
+    <p class="err" id="fErr" role="alert"></p>
+  </div>
+  <div class="dlg-foot">
+    <button class="btn danger" id="eDel" type="button">Eliminar</button>
+    <span class="spacer"></span>
+    <button class="btn" id="eCancel" type="button">Cancelar</button>
+    <button class="btn primary" id="eSave" type="button">Guardar</button>
+  </div>
+</dialog>
+
+<dialog id="taskDlg">
+  <div class="dlg-head"><div class="dc">Tarea única</div><h3 id="tdTitle">Nueva tarea</h3></div>
+  <div class="dlg-body form">
+    <label>¿Qué tienes que hacer?<input id="tTitle" maxlength="80" autocomplete="off"></label>
+    <div class="two">
+      <label>Tiempo estimado<select id="tEst"></select></label>
+      <label>Categoría<select id="tCat"></select></label>
+    </div>
+    <label>Fecha límite (opcional)<input type="date" id="tDue"></label>
+    <p class="err" id="tErr" role="alert"></p>
+  </div>
+  <div class="dlg-foot">
+    <button class="btn danger" id="tDel" type="button">Eliminar</button>
+    <span class="spacer"></span>
+    <button class="btn" id="tCancel" type="button">Cancelar</button>
+    <button class="btn primary" id="tSave" type="button">Guardar</button>
+  </div>
+</dialog>
+
+<dialog id="conf">
+  <div class="dlg-head"><h3 id="cTitle"></h3></div>
+  <div class="dlg-body"><p id="cMsg"></p></div>
+  <div class="dlg-foot">
+    <button class="btn" id="cNo" type="button">Cancelar</button>
+    <button class="btn primary" id="cYes" type="button" style="--cat:var(--c-gym)">Confirmar</button>
+  </div>
+</dialog>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

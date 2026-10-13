@@ -1,0 +1,22 @@
+// Servidor en memoria con la misma semántica que debe tener la base de datos real.
+// Lo usan los tests y sirve de referencia para implementar el backend.
+import { isNewer } from "../state/store.js";
+
+export function createMemoryRemote(){
+  const rows = new Map(); // "col:id" -> {col, rec, seq}
+  let seq = 0;
+  return {
+    rows,
+    async pull(cursor){
+      const since = cursor ?? 0;
+      const changes = [...rows.values()].filter(r => r.seq > since).sort((a, b) => a.seq - b.seq).map(({col, rec}) => ({col, rec}));
+      return {changes, cursor:seq};
+    },
+    async push(changes){
+      for (const {col, rec} of changes) {
+        const k = col + ":" + rec.id, cur = rows.get(k);
+        if (!cur || isNewer(rec, cur.rec)) rows.set(k, {col, rec, seq:++seq});
+      }
+    }
+  };
+}

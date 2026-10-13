@@ -1,0 +1,24 @@
+/* Tareas */
+.tasks{display:flex;flex-direction:column;gap:8px}
+.task{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--cat);border-radius:14px;padding:14px}
+.tcheck{width:30px;height:30px;border-radius:9px;border:2px solid var(--cat);background:none;cursor:pointer;font-weight:800;color:#fff;flex:none}
+.task.done .tcheck{background:var(--cat)}
+.task.done .ttl{text-decoration:line-through;color:var(--ink-2)}
+.ttl{font-weight:700}
+.tchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.tchip{font-size:.8rem;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--ink-2)}
+.tchip.cat{color:var(--cat);font-weight:700}
+.tchip.warn{background:color-mix(in srgb,var(--c-gym) 15%,var(--surface));color:var(--c-gym);font-weight:700}
+.tchip.sched{background:color-mix(in srgb,var(--c-trabajo) 14%,var(--surface));color:var(--c-trabajo);font-weight:700}
+.tact{display:flex;flex-direction:column;gap:6px;align-items:flex-end;font-size:.9rem}
+.tsugg{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.tsugg:empty{display:none}
+.tsugg .cs{margin:0;color:var(--ink-2);font-size:.9rem}
+.sugg{text-align:left;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);cursor:pointer}
+.sugg b{color:var(--cat)}
+.sugg span{color:var(--ink-2);font-size:.88rem}
+.done-box{margin-top:12px}
+.done-box .tip-body{padding:0 14px 14px;max-width:none}
+.flash{animation:flash 1.4s}
+@keyframes flash{0%,60%{box-shadow:0 0 0 4px var(--cat)}100%{box-shadow:none}}
+@media (max-width:620px){.task{grid-template-columns:auto 1fr}.tact{grid-column:2;flex-direction:row;align-items:center;gap:16px}}

@@ -1,0 +1,27 @@
+/* Colores, tipografías y temas claro/oscuro */
+:root{
+  --bg:#EDF0F5; --surface:#FFFFFF; --surface-2:#F6F8FB; --ink:#1B2233; --ink-2:#556079; --line:#DCE1EA;
+  --c-rutina:#8A94A6; --c-trabajo:#2F6FEB; --c-proyectos:#0E9F8E; --c-estudio:#7A4DE0;
+  --c-gym:#F26B1D; --c-contenido:#E0407B; --c-social:#D9A300; --c-personal:#4E9A2E;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --ppm:1px;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#131826; --surface:#1C2333; --surface-2:#232B3D; --ink:#E7EBF3; --ink-2:#9AA5BC; --line:#2E374B;
+    --c-rutina:#7D889C; --c-trabajo:#5B8FF5; --c-proyectos:#2EC4B1; --c-estudio:#9C7BF0;
+    --c-gym:#FF8A45; --c-contenido:#F0689A; --c-social:#F2C230; --c-personal:#72BF4E;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131826; --surface:#1C2333; --surface-2:#232B3D; --ink:#E7EBF3; --ink-2:#9AA5BC; --line:#2E374B;
+  --c-rutina:#7D889C; --c-trabajo:#5B8FF5; --c-proyectos:#2EC4B1; --c-estudio:#9C7BF0;
+  --c-gym:#FF8A45; --c-contenido:#F0689A; --c-social:#F2C230; --c-personal:#72BF4E;
+  color-scheme:dark;
+}

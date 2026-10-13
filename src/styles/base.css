@@ -1,0 +1,15 @@
+/* Base y elementos comunes */
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+img{max-width:100%}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--c-trabajo);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1240px;margin:0 auto;padding:28px 20px 60px}
+
+h2{font-family:var(--display);font-weight:700;font-size:1.6rem;margin:0 0 6px;letter-spacing:-.01em}
+.sub{margin:0 0 16px;color:var(--ink-2)}
+section{margin-top:44px}
+footer{margin-top:40px;color:var(--ink-2);font-size:.88rem}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:16px;padding:22px;color:var(--ink-2)}
