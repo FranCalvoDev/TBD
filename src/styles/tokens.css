@@ -1,27 +1,57 @@
-/* Colores, tipografías y temas claro/oscuro */
+/* Colores, tipografías, radios, sombras y temas.
+   Estilo: claro tipo Apple, neutros industriales (negro, grafito, gris, plata, blanco) con verde como acento.
+   El tema claro es el predeterminado; el oscuro se activa con el botón (data-theme="dark"). */
 :root{
-  --bg:#EDF0F5; --surface:#FFFFFF; --surface-2:#F6F8FB; --ink:#1B2233; --ink-2:#556079; --line:#DCE1EA;
-  --c-rutina:#8A94A6; --c-trabajo:#2F6FEB; --c-proyectos:#0E9F8E; --c-estudio:#7A4DE0;
-  --c-gym:#F26B1D; --c-contenido:#E0407B; --c-social:#D9A300; --c-personal:#4E9A2E;
-  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
-  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  /* Superficies y texto */
+  --bg:#F5F5F7; --surface:#FFFFFF; --surface-2:#F5F5F7; --surface-3:#E8E8ED;
+  --ink:#1D1D1F; --ink-2:#6E6E73; --ink-3:#8E8E93;
+  --line:#E5E5EA; --line-strong:#D2D2D7;
+  --silver:linear-gradient(180deg,#FFFFFF 0%,#EDEDF0 100%);
+  --glass:rgba(245,245,247,.72);
+
+  /* Bloque «ahora»: grafito sobre fondo claro */
+  --hero-bg:#1D1D1F; --hero-ink:#F5F5F7; --hero-ink-2:#A1A1A6; --hero-track:rgba(255,255,255,.14);
+
+  /* Acento verde y estados */
+  --accent:#1E9A55; --accent-strong:#15804A; --accent-ink:#137A41; --accent-soft:#E7F4EC; --on-accent:#FFFFFF;
+  --danger:#C9372C; --danger-soft:#FBEBE9; --warn:#9A6400; --warn-soft:#FAF0DC;
+
+  /* Categorías (validadas: brillo, croma y separación con daltonismo entre vecinas).
+     Rutina es neutra a propósito: es el fondo del día. */
+  --c-trabajo:#285FA8; --c-proyectos:#1E9A55; --c-estudio:#9277E0; --c-gym:#C8561A;
+  --c-contenido:#B23A7C; --c-social:#A08A10; --c-personal:#0090A0; --c-rutina:#8E8E93;
+
+  /* Tipografía: San Francisco en Apple, Inter en el resto */
+  --display:-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --body:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Forma y movimiento */
+  --r-xl:24px; --r-lg:18px; --r-md:14px; --r-sm:10px;
+  --shadow-1:0 1px 2px rgba(0,0,0,.04), 0 0 0 1px rgba(0,0,0,.035);
+  --shadow-2:0 1px 2px rgba(0,0,0,.04), 0 8px 28px rgba(0,0,0,.06);
+  --shadow-3:0 2px 8px rgba(0,0,0,.08), 0 28px 72px rgba(0,0,0,.20);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --tap:44px;
+
   --ppm:1px;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
   color-scheme:light;
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#131826; --surface:#1C2333; --surface-2:#232B3D; --ink:#E7EBF3; --ink-2:#9AA5BC; --line:#2E374B;
-    --c-rutina:#7D889C; --c-trabajo:#5B8FF5; --c-proyectos:#2EC4B1; --c-estudio:#9C7BF0;
-    --c-gym:#FF8A45; --c-contenido:#F0689A; --c-social:#F2C230; --c-personal:#72BF4E;
-    color-scheme:dark;
-  }
-}
 :root[data-theme="dark"]{
-  --bg:#131826; --surface:#1C2333; --surface-2:#232B3D; --ink:#E7EBF3; --ink-2:#9AA5BC; --line:#2E374B;
-  --c-rutina:#7D889C; --c-trabajo:#5B8FF5; --c-proyectos:#2EC4B1; --c-estudio:#9C7BF0;
-  --c-gym:#FF8A45; --c-contenido:#F0689A; --c-social:#F2C230; --c-personal:#72BF4E;
+  --bg:#000000; --surface:#1C1C1E; --surface-2:#232326; --surface-3:#2C2C2E;
+  --ink:#F5F5F7; --ink-2:#A1A1A6; --ink-3:#7C7C80;
+  --line:#2C2C2E; --line-strong:#3A3A3C;
+  --silver:linear-gradient(180deg,#3A3A3C 0%,#2C2C2E 100%);
+  --glass:rgba(0,0,0,.68);
+  --hero-bg:#1C1C1E; --hero-ink:#F5F5F7; --hero-ink-2:#A1A1A6; --hero-track:rgba(255,255,255,.12);
+  --accent:#30C46F; --accent-strong:#30C46F; --accent-ink:#4ED88A; --accent-soft:rgba(48,196,111,.16); --on-accent:#04140A;
+  --danger:#FF6B5E; --danger-soft:rgba(255,107,94,.16); --warn:#E6B04A; --warn-soft:rgba(230,176,74,.16);
+  --c-trabajo:#4A7FCC; --c-proyectos:#24A05C; --c-estudio:#8C76DA; --c-gym:#D6662A;
+  --c-contenido:#BE4A92; --c-social:#A68C14; --c-personal:#1294A3; --c-rutina:#8E8E93;
+  --shadow-1:0 0 0 1px rgba(255,255,255,.06);
+  --shadow-2:0 0 0 1px rgba(255,255,255,.07);
+  --shadow-3:0 0 0 1px rgba(255,255,255,.08), 0 28px 72px rgba(0,0,0,.6);
   color-scheme:dark;
 }

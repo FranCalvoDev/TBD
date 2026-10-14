@@ -50,6 +50,14 @@ El flujo es siempre el mismo: **la UI llama a una acción → la acción escribe
 - Las escrituras a localStorage se agrupan y se fuerzan al cerrar o esconder la página.
 - La lógica no depende del DOM, así que se prueba con tests.
 
+## Diseño
+
+Estilo claro tipo Apple con neutros industriales (negro, grafito, gris, plata, blanco) y verde como acento. El tema claro es el predeterminado; el oscuro se activa con el botón de la barra superior.
+
+- `src/styles/tokens.css`: toda la paleta, tipografía (San Francisco en Apple, Inter en el resto), radios y sombras. Para cambiar la apariencia, empezar por acá.
+- Los colores de categoría están validados para que se distingan entre sí (también con daltonismo); el texto siempre va en tinta y el color identifica con un punto o una barra.
+- En el celular (menos de 820 px): barra compacta, control segmentado de días, botones de 44 px como mínimo y diálogos como hoja que sube desde abajo.
+
 ## Datos y sincronización
 
 Los datos se guardan como registros en cuatro colecciones: `blocks`, `goals`, `tasks` y `weeks`. Cada registro tiene `updatedAt` y `deviceId`, y borrar deja una lápida; así cualquier base de datos puede sincronizar dispositivos resolviendo conflictos registro por registro.
