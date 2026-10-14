@@ -65,4 +65,5 @@ Los datos se guardan como registros en cuatro colecciones: `blocks`, `goals`, `t
 - **Sin configurar nada**: todo queda en el navegador (localStorage) y se comparte entre pestañas.
 - **Con base de datos**: definir `VITE_SYNC_URL` (ver `.env.example`) o pasar otro backend a `initData`. Los cambios se encolan, funcionan sin conexión y se suben al volver. Detalles en [docs/BASE_DE_DATOS.md](docs/BASE_DE_DATOS.md).
 
-Si este navegador tenía datos de la versión anterior (`francisco-app-v2`), se migran solos la primera vez.
+Esta hecho a mi medida, pero es un programa muy moldeable asi que se puede ajustar a quien lo necesite
+xoxo
