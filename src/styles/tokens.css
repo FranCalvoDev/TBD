@@ -24,9 +24,9 @@
   --c-trabajo:#285FA8; --c-proyectos:#00A82D; --c-estudio:#9277E0; --c-gym:#C8561A;
   --c-contenido:#B23A7C; --c-social:#A08A10; --c-personal:#0090A0; --c-rutina:#8E8E93;
 
-  /* Tipografía: San Francisco en Apple, Inter en el resto */
-  --display:-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --body:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Tipografía: San Francisco en Apple, Inter (incluida en la app, funciona sin conexión) en el resto */
+  --display:-apple-system, "SF Pro Display", "Inter Variable", "Inter", BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --body:-apple-system, "SF Pro Text", "Inter Variable", "Inter", BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
   /* Forma y movimiento */
   --r-xl:24px; --r-lg:18px; --r-md:14px; --r-sm:10px;
@@ -36,10 +36,14 @@
   --ease:cubic-bezier(.2,.8,.2,1);
   --tap:44px;
 
+  /* Márgenes de la barra de estado y de navegación. En Android, Capacitor define --safe-area-inset-*;
+     en el navegador se usa env(). La barra superior ya incluye el margen de arriba. */
+  --inset-top:var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
+  --inset-bottom:var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
+
   --ppm:1px;
   box-sizing:border-box;
-  padding-top:env(safe-area-inset-top,0px);
-  padding-bottom:env(safe-area-inset-bottom,0px);
+  padding-bottom:var(--inset-bottom);
   color-scheme:light;
 }
 :root[data-theme="dark"]{

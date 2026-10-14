@@ -37,7 +37,7 @@ dialog::backdrop{background:rgba(0,0,0,.32);-webkit-backdrop-filter:blur(6px);ba
 
 @media (max-width:620px){
   /* Hoja que sube desde abajo */
-  dialog{max-width:100%;margin:auto 0 0;border-radius:22px 22px 0 0;max-height:92vh;padding-bottom:env(safe-area-inset-bottom,0px)}
+  dialog{max-width:100%;margin:auto 0 0;border-radius:22px 22px 0 0;max-height:92vh;padding-bottom:var(--inset-bottom)}
   dialog[open]{animation:sheet-in .34s var(--ease)}
   dialog::before{content:"";display:block;width:36px;height:5px;border-radius:3px;background:var(--line-strong);margin:8px auto 0}
   .dlg-head{padding:14px 20px 10px}

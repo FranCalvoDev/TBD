@@ -2,6 +2,16 @@
 
 Planificador semanal personal: semana tipo con bloques, tareas únicas que se ubican en los huecos libres, metas semanales y estadísticas. Funciona sin conexión y está preparado para sincronizar entre dispositivos con una base de datos.
 
+## App de Android
+
+La app se empaqueta como app nativa de Android con [Capacitor](https://capacitorjs.com): el mismo código web corre dentro de la app, con ícono propio, botón «atrás» del sistema, barra de estado según el tema y fuente incluida (funciona sin conexión).
+
+- **Descargar:** cada push compila el APK en GitHub Actions (pestaña *Actions* → *App Android* → artefacto). En `main` además se publica en *Releases*, con enlace directo para abrir desde el teléfono.
+- **Instalar:** abrir el APK en el teléfono y aceptar «instalar apps de origen desconocido» la primera vez. Las versiones nuevas se instalan encima y conservan los datos.
+- **Firma:** para que las actualizaciones se instalen encima (y para Play Store), cargar los secretos `ANDROID_KEYSTORE_BASE64` y `ANDROID_KEYSTORE_PASSWORD` en *Settings → Secrets and variables → Actions*. Sin ellos el APK es de prueba.
+- **Desarrollo local** (con Android Studio instalado): `npm run android` copia la web al proyecto `android/` y `npm run android:open` lo abre en Android Studio.
+- **Ícono y pantalla de inicio:** se generan desde `assets/` con `npx capacitor-assets generate --android`.
+
 ## Uso
 
 ```bash
@@ -11,7 +21,7 @@ npm test          # tests de lógica, guardado y sincronización
 npm run build     # versión final en dist/ (se puede subir tal cual a GitHub Pages)
 ```
 
-`index.html` ya no se puede abrir con doble clic: usa módulos de JavaScript que necesitan `npm run dev` o el build de `dist/`.
+`index.html` no se abre con doble clic: usa módulos de JavaScript que necesitan `npm run dev` o el build de `dist/`.
 
 ## Funcionalidades
 
@@ -26,8 +36,12 @@ npm run build     # versión final en dist/ (se puede subir tal cual a GitHub Pa
 
 ```
 index.html            solo el HTML de la página
+android/              proyecto nativo de Android (Capacitor)
+assets/               ícono y pantalla de inicio de la app
+.github/workflows/    compilación del APK
 src/
   main.js             punto de entrada: conecta datos, lógica e interfaz
+  native.js           integración con Android: botón atrás y barra de estado
   styles/             CSS por sección (tokens y temas, grilla, tareas, metas, diálogos…)
   data/               contenido fijo: categorías, semana tipo, metas por defecto, plan de contenido y tips
   core/               utilidades sin dependencias: tiempo, reloj, escape de HTML, localStorage seguro

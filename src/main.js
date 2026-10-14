@@ -1,4 +1,5 @@
 // Punto de entrada: arma los datos, la lógica y la interfaz, y las conecta.
+import "@fontsource-variable/inter";
 import "./styles/tokens.css";
 import "./styles/base.css";
 import "./styles/hero.css";
@@ -30,6 +31,7 @@ import { renderStaticContent } from "./ui/staticContent.js";
 import { bindWeekControls } from "./ui/weekControls.js";
 import { initTheme } from "./ui/theme.js";
 import { showSyncStatus } from "./ui/syncStatus.js";
+import { initNative } from "./native.js";
 
 const {store, sync} = initData({onStatus:showSyncStatus});
 const sel = createSelectors(store);
@@ -61,6 +63,7 @@ Object.assign(sections, {
 
 bindWeekControls(ctx);
 initTheme();
+initNative();
 renderStaticContent();
 store.subscribe(e => renderer.onStoreChange(e.cols));
 renderer.all();
