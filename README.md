@@ -1,4 +1,4 @@
-# La semana de Francisco
+# ToBeDone - week&Goals Manager
 
 Planificador semanal personal: semana tipo con bloques, tareas únicas que se ubican en los huecos libres, metas semanales y estadísticas. Funciona sin conexión y está preparado para sincronizar entre dispositivos con una base de datos.
 
