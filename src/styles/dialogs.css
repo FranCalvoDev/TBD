@@ -1,27 +1,49 @@
-/* Diálogos y formularios */
-/* Dialog */
-dialog{border:0;border-radius:20px;padding:0;max-width:min(520px,calc(100% - 28px));width:100%;background:var(--surface);color:var(--ink);box-shadow:0 20px 60px rgba(10,15,30,.35)}
-dialog::backdrop{background:rgba(15,20,35,.5)}
-.dlg-head{padding:22px 24px 14px;border-top:8px solid var(--cat)}
-.dlg-head .dc{font-size:.85rem;font-weight:700;color:var(--cat)}
-.dlg-head h3{font-family:var(--display);font-size:1.7rem;margin:2px 0 4px;line-height:1.1}
-.dlg-head .dt{color:var(--ink-2)}
-.dlg-body{padding:0 24px 8px;max-height:52vh;overflow:auto}
+/* Diálogos (hoja inferior en el celular) y formularios */
+dialog{border:0;border-radius:var(--r-xl);padding:0;max-width:min(520px,calc(100% - 32px));width:100%;background:var(--surface);color:var(--ink);box-shadow:var(--shadow-3)}
+dialog[open]{animation:dlg-in .28s var(--ease)}
+dialog::backdrop{background:rgba(0,0,0,.32);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+@keyframes dlg-in{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+
+.dlg-head{padding:24px 24px 12px}
+.dlg-head .dc{font-size:.8rem;font-weight:500;color:var(--ink-2)}
+.dlg-head h3{font-family:var(--display);font-weight:700;font-size:1.6rem;margin:4px 0 4px;line-height:1.12;letter-spacing:-.03em}
+.dlg-head .dt{color:var(--ink-2);font-size:.92rem;font-variant-numeric:tabular-nums}
+.dlg-body{padding:0 24px 8px;max-height:56vh;overflow:auto;-webkit-overflow-scrolling:touch}
 .dlg-body p{margin:0 0 10px}
-.dlg-body ul{padding-left:20px;margin:0 0 10px}
+.dlg-body ul{padding-left:18px;margin:0 0 10px;color:var(--ink-2)}
 .dlg-body li{margin-bottom:6px}
-.dlg-foot{display:flex;gap:10px;justify-content:flex-end;padding:14px 24px 20px}
-.btn{padding:10px 16px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);cursor:pointer;font-weight:700}
-.btn.primary{background:var(--cat);border-color:var(--cat);color:#fff}
-.form label{display:block;font-weight:700;font-size:.9rem;margin-bottom:12px}
-.form input,.form select,.form textarea{display:block;width:100%;margin-top:4px;padding:9px 11px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font:inherit;font-weight:400}
-.form textarea{resize:vertical}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.err{color:var(--c-gym);font-weight:700;margin:0 0 6px;min-height:1.2em}
-.btn.danger{color:var(--c-gym);border-color:color-mix(in srgb,var(--c-gym) 40%,var(--line))}
-.btn.ghost{background:none}
+.dlg-body li::marker{color:var(--accent)}
+.dlg-foot{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;align-items:center;padding:16px 24px 22px;border-top:1px solid var(--line);margin-top:8px}
 .dlg-foot .spacer{flex:1}
-#conf .dlg-head{border-top-color:var(--ink-2)}
-.freed{background:color-mix(in srgb,var(--cat) 12%,var(--surface));border-radius:12px;padding:10px 12px}
-.dlg-foot{flex-wrap:wrap}
-@media (max-width:520px){.dlg-foot .spacer{display:none}.dlg-foot .btn{flex:1 1 auto}}
+
+/* Botones */
+.btn{min-height:var(--tap);padding:10px 18px;border-radius:12px;border:0;background:var(--surface-3);cursor:pointer;font-weight:600;font-size:.94rem;
+  transition:transform .12s var(--ease),filter .15s,background .15s}
+.btn:active{transform:scale(.96);filter:brightness(.94)}
+.btn.primary{background:var(--accent-strong);color:var(--on-accent)}
+.btn.danger{background:var(--danger-soft);color:var(--danger)}
+.btn.ghost{background:none;color:var(--accent-ink);padding-left:10px;padding-right:10px}
+#conf .btn.primary{background:var(--danger);color:#fff}
+
+/* Formularios estilo iOS. 16 px evita el zoom automático en iPhone. */
+.form label{display:block;font-weight:500;font-size:.82rem;color:var(--ink-2);margin-bottom:14px}
+.form input,.form select,.form textarea{display:block;width:100%;min-height:var(--tap);margin-top:6px;padding:10px 14px;border-radius:12px;border:1px solid transparent;
+  background:var(--surface-2);color:var(--ink);font:inherit;font-size:16px;font-weight:400;transition:border-color .15s,background .15s}
+.form input:focus,.form select:focus,.form textarea:focus{outline:none;border-color:var(--accent);background:var(--surface)}
+.form textarea{resize:vertical;line-height:1.4}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.err{color:var(--danger);font-weight:500;font-size:.9rem;margin:0 0 6px;min-height:1.2em}
+.freed{background:var(--accent-soft);color:var(--ink);border-radius:12px;padding:12px 14px}
+
+@media (max-width:620px){
+  /* Hoja que sube desde abajo */
+  dialog{max-width:100%;margin:auto 0 0;border-radius:22px 22px 0 0;max-height:92vh;padding-bottom:env(safe-area-inset-bottom,0px)}
+  dialog[open]{animation:sheet-in .34s var(--ease)}
+  dialog::before{content:"";display:block;width:36px;height:5px;border-radius:3px;background:var(--line-strong);margin:8px auto 0}
+  .dlg-head{padding:14px 20px 10px}
+  .dlg-body{padding:0 20px 8px;max-height:60vh}
+  .dlg-foot{padding:14px 20px 18px}
+  .dlg-foot .spacer{display:none}
+  .dlg-foot .btn{flex:1 1 auto}
+}
+@keyframes sheet-in{from{transform:translateY(100%)}to{transform:none}}
