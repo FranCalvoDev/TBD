@@ -51,7 +51,7 @@
 .blk.off .t{text-decoration:line-through;text-decoration-thickness:1.5px;color:var(--ink-3)}
 .blk.off::after{content:none}
 
-.nowline{position:absolute;left:-4px;right:-2px;height:2px;background:var(--accent);z-index:3;pointer-events:none;border-radius:2px}
+.nowline{position:absolute;left:-4px;right:-2px;height:2px;background:var(--accent);box-shadow:var(--glow);z-index:3;pointer-events:none;border-radius:2px}
 .nowline::before{content:"";position:absolute;left:-3px;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--surface)}
 
 /* Vista por día (celular) */
