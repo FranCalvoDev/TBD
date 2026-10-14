@@ -1,0 +1,14 @@
+{
+  "appId": "com.francalvodev.semana",
+  "appName": "Mi semana",
+  "webDir": "dist",
+  "android": {
+    "backgroundColor": "#F5F5F7"
+  },
+  "plugins": {
+    "SystemBars": {
+      "insetsHandling": "css",
+      "style": "LIGHT"
+    }
+  }
+}

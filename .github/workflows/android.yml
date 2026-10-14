@@ -1,0 +1,79 @@
+# Compila la app de Android en cada push.
+# - En cualquier rama: el APK queda como artefacto de la ejecución (pestaña Actions).
+# - En main: además se publica como Release, con enlace de descarga directa para el teléfono.
+# Firma: si existen los secretos ANDROID_KEYSTORE_BASE64 y ANDROID_KEYSTORE_PASSWORD se usa esa clave
+# (necesaria para instalar actualizaciones encima y para Play Store); si no, una de prueba.
+name: App Android
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    env:
+      VERSION_CODE: ${{ github.run_number }}
+      VERSION_NAME: 1.0.${{ github.run_number }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Tests
+        run: npm test
+
+      - name: Compilar la web y copiarla al proyecto Android
+        run: npm run build && npx cap sync android
+
+      - name: Preparar la clave de firma
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/mi-semana.keystore"
+            echo "ANDROID_KEYSTORE_FILE=$RUNNER_TEMP/mi-semana.keystore" >> "$GITHUB_ENV"
+            echo "Firmando con la clave propia."
+          else
+            echo "::warning::Sin secretos de firma: el APK es de prueba y las actualizaciones no se instalarán encima."
+          fi
+
+      - name: Compilar APK
+        working-directory: android
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon --stacktrace
+          mv app/build/outputs/apk/release/app-release.apk "$GITHUB_WORKSPACE/mi-semana-$VERSION_NAME.apk"
+
+      - name: Guardar el APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: mi-semana-${{ env.VERSION_NAME }}
+          path: mi-semana-*.apk
+
+      - name: Publicar versión
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.VERSION_NAME }}
+          name: Mi semana ${{ env.VERSION_NAME }}
+          files: mi-semana-*.apk
+          body: Descarga el APK desde el teléfono e instálalo. Si ya tenías la app, se actualiza conservando tus datos.
