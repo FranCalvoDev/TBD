@@ -3,13 +3,13 @@ import { createLocalAdapter } from "../src/storage/localAdapter.js";
 import { createSyncEngine } from "../src/storage/syncEngine.js";
 import { createMemoryRemote } from "../src/storage/memoryRemote.js";
 import { createHttpRemote } from "../src/storage/remote.js";
-import { KEYS } from "../src/storage/keys.js";
+import { KEYS, LEGACY } from "../src/storage/keys.js";
 import { memoryStorage, makeApp } from "./helpers.js";
 
 describe("guardado local y migración", () => {
   it("migra los datos del artefacto original (v2)", () => {
     const storage = memoryStorage();
-    storage.set(KEYS.legacyV2, {
+    storage.set(LEGACY.v2, {
       config:{v:1, blocks:[{id:"d0b0", day:0, s:"08:30", e:"09:00", cat:"rutina", title:"Mañana", p:"", l:[]}], goals:[{id:"gym", label:"Gym", cat:"gym", target:4}]},
       weeks:{"2026-S41":{type:"week", week:"2026-S41", label:"5/10", done:{d0b0:{cat:"rutina", min:30, day:0}}, goals:{gym:3}, planned:{count:1}}},
       tasks:{type:"tasks", items:[{id:"t1", title:"Trámite", est:30, cat:"personal", done:false}]}

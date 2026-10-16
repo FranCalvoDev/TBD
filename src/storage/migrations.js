@@ -1,5 +1,5 @@
 // Convierte formatos anteriores al formato de registros (schema 3).
-import { KEYS } from "./keys.js";
+import { LEGACY } from "./keys.js";
 
 const MIGRATED = {updatedAt:2, deviceId:"migrado"};
 
@@ -22,6 +22,8 @@ export function fromV2(v2){
 
 /** Busca datos de versiones anteriores en este navegador. */
 export function migrateLegacy(storage){
-  const v2 = storage.get(KEYS.legacyV2);
+  const v3 = storage.get(LEGACY.data);
+  if (v3?.schema === 3) return v3.records;
+  const v2 = storage.get(LEGACY.v2);
   return v2 ? fromV2(v2) : null;
 }

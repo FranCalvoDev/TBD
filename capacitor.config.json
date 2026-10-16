@@ -1,6 +1,6 @@
 {
-  "appId": "com.francalvodev.semana",
-  "appName": "Mi semana",
+  "appId": "com.francalvodev.tbd",
+  "appName": "TBD",
   "webDir": "dist",
   "android": {
     "backgroundColor": "#F5F5F7"

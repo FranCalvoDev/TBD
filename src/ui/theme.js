@@ -1,6 +1,6 @@
 // Tema claro/oscuro. El claro es el predeterminado; la elección se guarda en cada dispositivo (no se sincroniza).
 import { safeStorage } from "../core/utils.js";
-import { KEYS } from "../storage/keys.js";
+import { KEYS, LEGACY } from "../storage/keys.js";
 import { $ } from "./dom.js";
 
 // Color de la barra del navegador en el celular, igual al fondo de cada tema.
@@ -13,7 +13,7 @@ export function initTheme(storage = safeStorage()){
     meta?.setAttribute("content", BAR[t]);
     $("themeBtn").textContent = t === "dark" ? "Tema claro" : "Tema oscuro";
   };
-  apply(storage.get(KEYS.theme) === "dark" ? "dark" : "light");
+  apply((storage.get(KEYS.theme) ?? storage.get(LEGACY.theme)) === "dark" ? "dark" : "light");
   $("themeBtn").addEventListener("click", () => {
     const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
     apply(next); storage.set(KEYS.theme, next);

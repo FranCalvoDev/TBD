@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace = "com.francalvodev.semana"
+    namespace = "com.francalvodev.tbd"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.francalvodev.semana"
+        applicationId "com.francalvodev.tbd"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         // En GitHub Actions: VERSION_CODE = número de compilación, así cada APK nuevo se instala encima del anterior.
