@@ -1,5 +1,5 @@
 // Lista de tareas únicas con sugerencias de horario.
-import { catVar, catName } from "../data/categories.js";
+import { catVar, catName } from "../state/categories.js";
 import { minToStr, durTxt, nowInfo } from "../core/time.js";
 import { esc } from "../core/utils.js";
 import { suggestSlots, slotLabel, slotPassed, dueStatus, sortPending, freeMinutesLeft } from "../domain/tasks.js";

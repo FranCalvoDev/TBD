@@ -2,7 +2,6 @@
 import { END, toMin, minToStr, mondayLabel, nowInfo } from "../core/time.js";
 import { clone, uid } from "../core/utils.js";
 import { now } from "../core/clock.js";
-import { defaultBlocks } from "../data/defaultWeek.js";
 import { doneEntry, freeWindow } from "../domain/schedule.js";
 
 export function createActions(store, sel){
@@ -36,15 +35,6 @@ export function createActions(store, sel){
       return rec.id;
     },
     deleteBlock(id){ store.remove("blocks", id); refreshPlanned(); },
-    restoreBlocks(){
-      const defs = defaultBlocks(), keep = new Set(defs.map(x => x.id));
-      store.commit([
-        ...store.list("blocks").filter(x => !keep.has(x.id)).map(x => ({col:"blocks", id:x.id, remove:true})),
-        ...defs.map(rec => ({col:"blocks", rec}))
-      ]);
-      refreshPlanned();
-    },
-
     bumpGoal(goalId, delta){
       const w = weekRecord();
       w.goals[goalId] = Math.max(0, (w.goals[goalId] || 0) + delta);
@@ -53,9 +43,28 @@ export function createActions(store, sel){
     updateGoal(id, patch){ const g = store.get("goals", id); if (g) store.put("goals", {...g, ...patch}); },
     addGoal(){
       const order = Math.max(-1, ...sel.goals().map(g => g.order ?? 0)) + 1;
-      store.put("goals", {id:"g"+uid(), label:"Nueva meta", cat:"personal", target:3, order});
+      const id = "g"+uid();
+      store.put("goals", {id, label:"Nueva meta", cat:sel.firstCategory(), target:3, order});
+      return id;
     },
     deleteGoal(id){ store.remove("goals", id); },
+
+    addCategory(){
+      const cats = sel.categories(), used = new Set(cats.map(c => c.color));
+      const color = ["c1","c2","c3","c4","c5","c6","c7","c8"].find(c => !used.has(c)) || "c8";
+      const order = Math.max(-1, ...cats.map(c => c.order ?? 0)) + 1;
+      const id = "cat"+uid();
+      store.put("categories", {id, name:"Nueva categoría", color, order});
+      return id;
+    },
+    updateCategory(id, patch){ const c = sel.category(id); if (c) store.put("categories", {...c, ...patch}); },
+    /** Borra la categoría; lo que la usaba queda «Sin categoría» (se ve en gris). */
+    deleteCategory(id){ store.remove("categories", id); },
+    /** Cuántos bloques, tareas y metas usan una categoría. */
+    categoryUsage(id){
+      return [0,1,2,3,4,5,6].reduce((a, d) => a + sel.blocksOf(d).filter(x => x.cat === id).length, 0) +
+        sel.tasks().filter(t => t.cat === id).length + sel.goals().filter(g => g.cat === id).length;
+    },
 
     saveTask(data, id){
       if (id) {

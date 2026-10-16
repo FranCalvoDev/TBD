@@ -19,10 +19,10 @@
   --accent:#00A82D; --accent-strong:#00E63B; --accent-ink:#007A1A; --accent-soft:#E2F9E7; --on-accent:#0D0208;
   --danger:#C9372C; --danger-soft:#FBEBE9; --warn:#9A6400; --warn-soft:#FAF0DC;
 
-  /* Categorías (validadas: brillo, croma y separación con daltonismo entre vecinas).
-     Rutina es neutra a propósito: es el fondo del día. */
-  --c-trabajo:#285FA8; --c-proyectos:#00A82D; --c-estudio:#9277E0; --c-gym:#C8561A;
-  --c-contenido:#B23A7C; --c-social:#A08A10; --c-personal:#0090A0; --c-rutina:#8E8E93;
+  /* Colores de categoría --c1 … --c8 (validados: brillo, croma y separación con daltonismo entre vecinos).
+     --c8 es neutro (plata): se usa también para lo que no tiene categoría. */
+  --c1:#285FA8; --c2:#00A82D; --c3:#9277E0; --c4:#C8561A;
+  --c5:#B23A7C; --c6:#A08A10; --c7:#0090A0; --c8:#8E8E93;
 
   /* Tipografía: San Francisco en Apple, Inter (incluida en la app, funciona sin conexión) en el resto */
   --display:-apple-system, "SF Pro Display", "Inter Variable", "Inter", BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -56,8 +56,8 @@
   --neon:#00FF41; --glow:0 0 12px rgba(0,255,65,.6), 0 0 2px rgba(0,255,65,.9);
   --accent:#00FF41; --accent-strong:#00FF41; --accent-ink:#00FF41; --accent-soft:rgba(0,255,65,.13); --on-accent:#0D0208;
   --danger:#FF6B5E; --danger-soft:rgba(255,107,94,.16); --warn:#E6B04A; --warn-soft:rgba(230,176,74,.16);
-  --c-trabajo:#4A7FCC; --c-proyectos:#14A83A; --c-estudio:#8C76DA; --c-gym:#D6662A;
-  --c-contenido:#BE4A92; --c-social:#A68C14; --c-personal:#1294A3; --c-rutina:#8E8E93;
+  --c1:#4A7FCC; --c2:#14A83A; --c3:#8C76DA; --c4:#D6662A;
+  --c5:#BE4A92; --c6:#A68C14; --c7:#1294A3; --c8:#8E8E93;
   --shadow-1:0 0 0 1px rgba(255,255,255,.06);
   --shadow-2:0 0 0 1px rgba(255,255,255,.07);
   --shadow-3:0 0 0 1px rgba(255,255,255,.08), 0 28px 72px rgba(0,0,0,.6);

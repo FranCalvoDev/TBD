@@ -1,5 +1,6 @@
 // Bloque «ahora»: qué toca en este momento, cuánto falta y qué sigue.
-import { catVar, catName, DAYS } from "../data/categories.js";
+import { DAYS } from "../data/categories.js";
+import { catVar, catName } from "../state/categories.js";
 import { START, toMin, minToStr, fmt, durTxt, nowInfo } from "../core/time.js";
 import { esc } from "../core/utils.js";
 import { $, setText } from "./dom.js";
@@ -14,9 +15,13 @@ export function createHero({sel}){
     const cur = tItems.find(inNow) || items.find(inNow);
     const nx = items.find(x => toMin(x.s) > min);
     setText("heroWhen", `${DAYS[day]}, ${minToStr(min % 1440)}`);
-    if (min < START) {
-      hero.style.setProperty("--hero-c", catVar("rutina"));
-      setText("heroNow", "Hora de dormir"); setText("heroMeta", "Te levantas a las 8:30."); bar.style.width = "0";
+    const empty = ![0,1,2,3,4,5,6].some(d => sel.blocksOf(d).length);
+    if (empty && !cur) {
+      hero.style.setProperty("--hero-c", "var(--accent)");
+      setText("heroNow", "Arma tu semana"); setText("heroMeta", "Agrega tus bloques y acá vas a ver qué toca en cada momento."); bar.style.width = "0";
+    } else if (min < START) {
+      hero.style.setProperty("--hero-c", "var(--c8)");
+      setText("heroNow", "Fuera de tu horario"); setText("heroMeta", `Tu día empieza a las ${fmt(minToStr(START))}.`); bar.style.width = "0";
     } else if (cur) {
       hero.style.setProperty("--hero-c", catVar(cur.cat));
       setText("heroNow", cur.title);
@@ -26,6 +31,8 @@ export function createHero({sel}){
       hero.style.setProperty("--hero-c", "var(--ink)");
       setText("heroNow", "Tiempo libre"); setText("heroMeta", "Descansa o adelanta algo pendiente."); bar.style.width = "0";
     }
+    // Semana vacía: sin barra de progreso ni «después».
+    next.hidden = $("heroBar").hidden = empty && !cur;
     if (nx) { hero.style.setProperty("--next-c", catVar(nx.cat)); next.innerHTML = `Después: <b>${esc(nx.title)}</b> a las ${fmt(nx.s)}`; }
     else next.textContent = "No hay más bloques hoy.";
   };

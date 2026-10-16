@@ -1,5 +1,6 @@
 // Grilla semanal (pantallas anchas). La línea de «ahora» se mueve sin redibujar la grilla.
-import { DAYS, catVar } from "../data/categories.js";
+import { DAYS } from "../data/categories.js";
+import { catVar } from "../state/categories.js";
 import { START, END, toMin, minToStr, fmt, span, nowInfo } from "../core/time.js";
 import { esc } from "../core/utils.js";
 import { $, hit } from "./dom.js";
@@ -17,7 +18,7 @@ export function createWeekGrid(ctx){
 
   function render(){
     const {day} = nowInfo(), key = sel.curKey(), w = sel.curWeek(), done = w.done || {}, off = w.off || {};
-    const dim = cat => view.active.has(cat) ? "" : " dim";
+    const dim = cat => view.hidden.has(cat) ? " dim" : "";
     let html = "<div></div>";
     DAYS.forEach((name, i) => {
       const bl = sel.blocksOf(i).filter(x => !off[x.id]), total = bl.length, dn = bl.filter(x => done[x.id]).length;
@@ -39,6 +40,7 @@ export function createWeekGrid(ctx){
       html += `</div>`;
     });
     el.innerHTML = html;
+    $("weekEmpty").hidden = [0,1,2,3,4,5,6].some(d => sel.blocksOf(d).length);
     todayCol = el.querySelector(".col.today");
     nowline = null;
     updateNow();

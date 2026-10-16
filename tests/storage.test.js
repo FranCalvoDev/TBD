@@ -19,6 +19,9 @@ describe("guardado local y migración", () => {
     expect(recs.weeks[0].type).toBeUndefined();
     expect(recs.goals[0]).toMatchObject({id:"gym", order:0});
     expect(recs.tasks[0].title).toBe("Trámite");
+    // Las categorías fijas de antes se convierten en categorías editables, solo las que se usan
+    expect(recs.categories.map(c => c.id).sort()).toEqual(["gym", "personal", "rutina"]);
+    expect(recs.categories.find(c => c.id === "gym")).toMatchObject({name:"Ejercicio", color:"c4"});
   });
   it("guarda y vuelve a leer, y conserva el id del dispositivo", () => {
     const storage = memoryStorage(), local = createLocalAdapter(storage);
@@ -26,15 +29,15 @@ describe("guardado local y migración", () => {
     expect(createLocalAdapter(storage).deviceId()).toBe(id);
     const {store} = makeApp(id);
     local.save(store.snapshot());
-    expect(local.load().blocks).toHaveLength(49);
+    expect(local.load().blocks).toHaveLength(14);
   });
 });
 
 describe("sincronización entre dispositivos", () => {
   const engines = [];
   afterEach(() => engines.splice(0).forEach(e => e.stop()));
-  function device(name, remote){
-    const app = makeApp(name), storage = memoryStorage(), statuses = [];
+  function device(name, remote, records){
+    const app = makeApp(name, records), storage = memoryStorage(), statuses = [];
     const sync = createSyncEngine({store:app.store, remote, storage, pushDelayMs:1e9, onStatus:s => statuses.push(s)});
     engines.push(sync);
     return {...app, sync, storage, statuses};
@@ -76,9 +79,10 @@ describe("sincronización entre dispositivos", () => {
     const remote = createMemoryRemote(), a = device("a", remote);
     a.act.saveBlock({day:0, cat:"rutina", title:"Mañana distinta", s:"08:30", e:"09:00", p:"", l:[]}, "d0b0");
     await a.sync.sync();
-    const b = device("b", remote);
+    const b = device("b", remote, "empty");               // instalación nueva, vacía
     await b.sync.sync();
     expect(b.sel.block("d0b0").title).toBe("Mañana distinta");
+    expect(b.sel.categories().length).toBe(8);
   });
 
   it("sin conexión guarda la cola y la sube al volver", async () => {

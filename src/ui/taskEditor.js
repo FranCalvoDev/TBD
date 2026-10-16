@@ -1,25 +1,24 @@
 // Crear y editar tareas únicas.
-import { CATS, catVar } from "../data/categories.js";
+import { catVar } from "../state/categories.js";
 import { durTxt } from "../core/time.js";
-import { $ } from "./dom.js";
+import { $, categoryOptions } from "./dom.js";
 
 const ESTIMATES = [15, 30, 45, 60, 90, 120, 180, 240];
 
 export function createTaskEditor(ctx){
   const dlg = $("taskDlg"), {sel, act, view} = ctx, est = $("tEst");
   let editId = null;
-  $("tCat").innerHTML = Object.entries(CATS).map(([k, v]) => `<option value="${k}">${v.name}</option>`).join("");
   est.innerHTML = ESTIMATES.map(m => `<option value="${m}">${durTxt(m)}</option>`).join("");
 
   function open(id){
     editId = id || null;
-    const t = id ? sel.task(id) : {title:"", est:30, cat:"personal", due:""};
+    const t = id ? sel.task(id) : {title:"", est:30, cat:sel.firstCategory(), due:""};
     if (!t) return;
     $("tdTitle").textContent = id ? "Editar tarea" : "Nueva tarea";
     $("tTitle").value = t.title;
     if (![...est.options].some(o => Number(o.value) === t.est)) est.insertAdjacentHTML("beforeend", `<option value="${t.est}">${durTxt(t.est)}</option>`);
     est.value = t.est;
-    $("tCat").value = t.cat;
+    $("tCat").innerHTML = categoryOptions(sel, t.cat);
     $("tDue").value = t.due || "";
     $("tErr").textContent = "";
     $("tDel").style.visibility = id ? "visible" : "hidden";

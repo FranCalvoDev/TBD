@@ -33,8 +33,8 @@
       <button class="add-btn" id="addBlock" type="button">+ Agregar bloque</button>
       <button class="link-btn" id="showAll" type="button">Mostrar todas</button>
       <button class="link-btn" id="resetWeek" type="button">Reiniciar la semana</button>
-      <button class="link-btn" id="restore" type="button">Restaurar rutina original</button>
     </div>
+    <div class="empty week-empty" id="weekEmpty" hidden><b>Tu semana está vacía.</b> Agrega bloques con lo que haces cada semana: clases, trabajo, ejercicio, comidas… Después vas a poder marcarlos como hechos y ver tu progreso.</div>
     <div class="grid-scroll"><div class="week" id="week"></div></div>
     <div class="mobile">
       <div class="tabs" id="tabs" role="tablist"></div>
@@ -49,7 +49,7 @@
     </div>
     <p class="sub" id="taskSum"></p>
     <div class="tasks" id="taskList"></div>
-    <details id="doneTasks" class="done-box" style="--cat:var(--c-proyectos)" hidden><summary>Completadas</summary><div class="tasks tip-body" id="doneList"></div></details>
+    <details id="doneTasks" class="done-box" style="--cat:var(--accent)" hidden><summary>Completadas</summary><div class="tasks done-list" id="doneList"></div></details>
   </section>
 
   <section>
@@ -67,19 +67,6 @@
     <div id="stats"></div>
   </section>
 
-  <section>
-    <h2>Primer mes de contenido</h2>
-    <p class="sub">Una pieza principal por semana, reutilizada en cortos, LinkedIn y Reddit.</p>
-    <div class="month" id="month"></div>
-  </section>
-
-  <section>
-    <h2>Tips</h2>
-    <p class="sub">Todo lo que hablamos, ordenado por área.</p>
-    <div class="tips" id="tips"></div>
-  </section>
-
-  <footer id="foot">Te levantas a las 8:30 y te acuestas a las 00:30, todos los días.</footer>
 </div>
 
 <dialog id="dlg">
@@ -135,6 +122,12 @@
     <button class="btn" id="tCancel" type="button">Cancelar</button>
     <button class="btn primary" id="tSave" type="button">Guardar</button>
   </div>
+</dialog>
+
+<dialog id="catDlg">
+  <div class="dlg-head"><div class="dc">Personaliza tu semana</div><h3>Categorías</h3><div class="dt">Ponles nombre y color. Los cambios se guardan solos.</div></div>
+  <div class="dlg-body"><div class="cat-list" id="catList"></div><button class="link-btn" id="catAdd" type="button">+ Nueva categoría</button></div>
+  <div class="dlg-foot"><span class="spacer"></span><button class="btn primary" id="catDone" type="button">Listo</button></div>
 </dialog>
 
 <dialog id="conf">

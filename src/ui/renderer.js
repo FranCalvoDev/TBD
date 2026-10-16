@@ -1,14 +1,15 @@
 // Agrupa los redibujados en un solo cuadro de animación y redibuja solo
 // las secciones que dependen de las colecciones que cambiaron.
 const DEPS = {
-  hero:        ["blocks", "tasks", "weeks"],
-  legend:      ["blocks"],
-  week:        ["blocks", "tasks", "weeks"],
-  mobile:      ["blocks", "tasks", "weeks"],
-  blockDialog: ["blocks", "tasks", "weeks"],
-  tasks:       ["blocks", "tasks", "weeks"],
-  goals:       ["goals", "weeks"],
-  stats:       ["blocks", "goals", "tasks", "weeks"]
+  hero:        ["categories", "blocks", "tasks", "weeks"],
+  legend:      ["categories", "blocks"],
+  week:        ["categories", "blocks", "tasks", "weeks"],
+  mobile:      ["categories", "blocks", "tasks", "weeks"],
+  blockDialog: ["categories", "blocks", "tasks", "weeks"],
+  tasks:       ["categories", "blocks", "tasks", "weeks"],
+  goals:       ["categories", "goals", "weeks"],
+  stats:       ["categories", "blocks", "goals", "tasks", "weeks"],
+  categories:  ["categories"]
 };
 
 export function createRenderer(sections){

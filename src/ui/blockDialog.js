@@ -1,5 +1,6 @@
 // Detalle de un bloque: tips, marcar como hecho, dar de baja y usar el horario liberado.
-import { DAYS, catVar, catName } from "../data/categories.js";
+import { DAYS } from "../data/categories.js";
+import { catVar, catName } from "../state/categories.js";
 import { toMin, minToStr, fmt, durTxt, span } from "../core/time.js";
 import { esc } from "../core/utils.js";
 import { freeWindow, isFreed } from "../domain/schedule.js";

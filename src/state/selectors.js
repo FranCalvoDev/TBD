@@ -16,6 +16,7 @@ export function createSelectors(store){
       cache = {
         byDay,
         planned: computePlanned(byDay.flat()),
+        categories: store.list("categories").sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
         goals: store.list("goals").sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
         tasks: store.list("tasks"),
         weeks: store.list("weeks").sort((a, b) => a.id < b.id ? -1 : 1)
@@ -26,6 +27,9 @@ export function createSelectors(store){
 
   const sel = {
     curKey: () => currentWeekKey(),
+    categories: () => memo().categories,
+    category: id => store.get("categories", id),
+    firstCategory: () => memo().categories[0]?.id || "",
     blocksOf: day => memo().byDay[day] || [],
     block: id => store.get("blocks", id),
     planned: () => memo().planned,
