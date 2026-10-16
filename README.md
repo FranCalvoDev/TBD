@@ -56,6 +56,7 @@ src/
   ui/                 una pieza por sección de la pantalla; dibujan desde el estado y llaman acciones
 tests/                tests de Vitest para core, domain, state y storage
 docs/BASE_DE_DATOS.md cómo conectar una base de datos
+sql/schema.sql        tabla y funciones de sincronización para PostgreSQL, listas para ejecutar
 ```
 
 El flujo es siempre el mismo: **la UI llama a una acción → la acción escribe en el store → el store avisa → se redibujan solo las secciones afectadas** y, en paralelo, se guarda la copia local y se encola el cambio para la base de datos.
