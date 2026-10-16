@@ -1,4 +1,4 @@
-package com.francalvodev.semana;
+package com.francalvodev.tbd;
 
 import com.getcapacitor.BridgeActivity;
 

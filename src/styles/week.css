@@ -88,3 +88,8 @@
   .legend::-webkit-scrollbar{display:none}
   .chip{flex:none}
 }
+
+/* Chip para editar categorías y aviso de semana vacía */
+.chip.edit{background:transparent;box-shadow:inset 0 0 0 1px var(--line-strong);color:var(--accent-ink);font-weight:600}
+.week-empty{margin-bottom:14px}
+.week-empty b{color:var(--ink)}

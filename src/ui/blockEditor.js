@@ -1,25 +1,25 @@
 // Crear y editar bloques de la semana tipo.
-import { CATS, DAYS, catVar } from "../data/categories.js";
+import { DAYS } from "../data/categories.js";
+import { catVar } from "../state/categories.js";
 import { fmt } from "../core/time.js";
 import { validateBlock } from "../domain/validation.js";
-import { $ } from "./dom.js";
+import { $, categoryOptions } from "./dom.js";
 
 export function createBlockEditor(ctx){
   const ed = $("edit"), {sel, act, view} = ctx;
   let editId = null;
   $("fDay").innerHTML = DAYS.map((d, i) => `<option value="${i}">${d}</option>`).join("");
-  $("fCat").innerHTML = Object.entries(CATS).map(([k, v]) => `<option value="${k}">${v.name}</option>`).join("");
   const syncColor = () => ed.style.setProperty("--cat", catVar($("fCat").value));
 
   function open(id){
     editId = id || null;
-    const x = id ? sel.block(id) : {day:view.selDay, s:"10:00", e:"11:00", cat:"proyectos", title:"", p:"", l:[]};
+    const x = id ? sel.block(id) : {day:view.selDay, s:"10:00", e:"11:00", cat:sel.firstCategory(), title:"", p:"", l:[]};
     if (!x) return;
     $("eTitle").textContent = id ? "Editar bloque" : "Nuevo bloque";
     $("eCat").textContent = id ? DAYS[x.day] : "Agregar a tu semana";
     $("fTitle").value = x.title;
     $("fDay").value = x.day;
-    $("fCat").value = x.cat;
+    $("fCat").innerHTML = categoryOptions(sel, x.cat);
     $("fS").value = fmt(x.s);
     $("fE").value = fmt(x.e);
     $("fP").value = x.p || "";

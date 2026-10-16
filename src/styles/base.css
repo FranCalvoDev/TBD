@@ -24,3 +24,15 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);color:v
   section{margin-top:44px}
 }
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+
+/* Tus datos: exportar e importar copias */
+.data-card{background:var(--surface);border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow-1)}
+.data-actions{display:flex;gap:10px;flex-wrap:wrap}
+.data-msg{margin:12px 0 0;font-size:.9rem;color:var(--ink-2);min-height:1.3em}
+.data-msg:empty{display:none}
+.data-msg.ok{color:var(--accent-ink)}
+.data-msg.error{color:var(--danger)}
+@media (max-width:520px){.data-actions .btn{flex:1 1 auto}}
+
+/* Horas y números con la tipografía de títulos (Chakra Petch) */
+.hero .when,.axis span,.blk .h,.item .tm,.dh .p,.kpi .v,.goal .num,.chip small,.tchip,.hbar .nb,.dlg-head .dt,.chart svg text{font-family:var(--numeric)}

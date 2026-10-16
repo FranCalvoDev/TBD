@@ -1,10 +1,12 @@
 # Conectar una base de datos
 
+> **Privacidad:** el repositorio es público. Las claves y URLs de tu base de datos van en variables de entorno (`.env`, ignorado por git) o en los secretos de GitHub Actions, nunca en el código. Cada usuario solo debe poder leer y escribir sus propias filas (por ejemplo, con Row Level Security por `user_id`).
+
 La app ya tiene todo el lado del cliente: cola de cambios sin conexión, reintentos, resolución de conflictos y migración. Para sincronizar entre dispositivos falta un backend que cumpla el contrato de `src/storage/remote.js`.
 
 ## Modelo de datos
 
-Cuatro colecciones. Cada registro es un objeto JSON con estos campos comunes:
+Cinco colecciones. Cada registro es un objeto JSON con estos campos comunes:
 
 | Campo       | Tipo    | Descripción                                             |
 |-------------|---------|---------------------------------------------------------|
@@ -15,8 +17,9 @@ Cuatro colecciones. Cada registro es un objeto JSON con estos campos comunes:
 
 | Colección | id                  | Contenido |
 |-----------|---------------------|-----------|
-| `blocks`  | `d1b3`, `u…`        | `day` (0 = lunes), `s`, `e` ("HH:MM", hasta "24:30"), `cat`, `title`, `p`, `l` (tips) |
-| `goals`   | `gym`, `g…`         | `label`, `cat`, `target`, `order` |
+| `categories` | `trabajo`, `cat…` | `name`, `color` (`c1`…`c8`, la paleta de `tokens.css`), `order` |
+| `blocks`  | `u…`                | `day` (0 = lunes), `s`, `e` ("HH:MM", hasta "24:30"), `cat` (id de categoría), `title`, `p` (nota), `l` (tips) |
+| `goals`   | `g…`                | `label`, `cat`, `target`, `order` |
 | `tasks`   | `t…`                | `title`, `est` (min), `cat`, `due` ("AAAA-MM-DD"), `done`, `doneAt`, `doneWeek`, `slot` `{week, day, s, e}` |
 | `weeks`   | `2026-S42`          | `label`, `done` y `off` (`{[blockId]: {cat, min, day, title, at}}`), `goals` (`{[goalId]: número}`), `planned` |
 
@@ -25,6 +28,12 @@ Cuatro colecciones. Cada registro es un objeto JSON con estos campos comunes:
 Cuando llegan dos versiones del mismo registro gana la de `updatedAt` mayor; si empatan, la de `deviceId` mayor (función `isNewer` en `src/state/store.js`). El servidor tiene que aplicar exactamente la misma regla al guardar.
 
 **Límite conocido:** una semana es un solo registro. Si dos dispositivos sin conexión marcan bloques distintos de la misma semana, al sincronizar queda solo la última versión. Si eso molesta, el siguiente paso es separar cada marca y cada meta semanal en su propio registro.
+
+## Configuración sin exponer datos
+
+- **Desarrollo:** copia `.env.example` a `.env` y completa `VITE_SYNC_URL`. `.env` está en `.gitignore`.
+- **APK en GitHub Actions:** crea la variable `VITE_SYNC_URL` en *Settings → Secrets and variables → Actions → Variables*. El workflow la usa al compilar. Si tu backend necesita otras variables públicas (por ejemplo la URL y la clave anónima de Supabase), agrégalas igual y pásalas en el paso «Compilar la web» de `.github/workflows/android.yml`.
+- Todo lo que empieza con `VITE_` termina dentro de la app compilada: úsalo solo para valores pensados para ser públicos (URLs, claves anónimas). Las claves de servidor nunca van en la app.
 
 ## Contrato de la API
 
@@ -49,7 +58,7 @@ create sequence records_seq;
 
 create table records (
   user_id    uuid    not null,
-  col        text    not null check (col in ('blocks', 'goals', 'tasks', 'weeks')),
+  col        text    not null check (col in ('categories', 'blocks', 'goals', 'tasks', 'weeks')),
   id         text    not null,
   data       jsonb   not null,              -- el registro completo, tal como lo manda la app
   updated_at bigint  not null,

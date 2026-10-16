@@ -40,6 +40,9 @@ jobs:
         run: npm test
 
       - name: Compilar la web y copiarla al proyecto Android
+        env:
+          # Opcional: URL de la API de sincronización (Settings → Secrets and variables → Actions → Variables).
+          VITE_SYNC_URL: ${{ vars.VITE_SYNC_URL }}
         run: npm run build && npx cap sync android
 
       - name: Preparar la clave de firma
@@ -61,19 +64,19 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew assembleRelease --no-daemon --stacktrace
-          mv app/build/outputs/apk/release/app-release.apk "$GITHUB_WORKSPACE/mi-semana-$VERSION_NAME.apk"
+          mv app/build/outputs/apk/release/app-release.apk "$GITHUB_WORKSPACE/tbd-$VERSION_NAME.apk"
 
       - name: Guardar el APK
         uses: actions/upload-artifact@v4
         with:
-          name: mi-semana-${{ env.VERSION_NAME }}
-          path: mi-semana-*.apk
+          name: tbd-${{ env.VERSION_NAME }}
+          path: tbd-*.apk
 
       - name: Publicar versión
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ env.VERSION_NAME }}
-          name: Mi semana ${{ env.VERSION_NAME }}
-          files: mi-semana-*.apk
+          name: TBD ${{ env.VERSION_NAME }}
+          files: tbd-*.apk
           body: Descarga el APK desde el teléfono e instálalo. Si ya tenías la app, se actualiza conservando tus datos.

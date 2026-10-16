@@ -5,6 +5,7 @@ import { suggestSlots, slotPassed, dueStatus } from "../src/domain/tasks.js";
 import { validateBlock } from "../src/domain/validation.js";
 import { computeStats } from "../src/domain/stats.js";
 import { makeApp } from "./helpers.js";
+import { setCategories, catName, catVar } from "../src/state/categories.js";
 
 // Martes 13/10/2026 a las 10:15, durante el curso de la UTN.
 beforeEach(() => setNow(new Date(2026, 9, 13, 10, 15)));
@@ -17,7 +18,7 @@ describe("huecos y sugerencias", () => {
   });
   it("un bloque hecho libera su horario", () => {
     const {sel, act} = makeApp();
-    act.toggleDone("d1b4"); // Edición de contenido, 14:00 a 16:00
+    act.toggleDone("d1b4"); // Edición, 14:00 a 16:00
     expect(freeGaps(sel, sel.curKey(), 1, 615)[0]).toEqual([840, 1020]);
   });
   it("sugiere huecos y lugares dentro de bloques de la misma categoría", () => {
@@ -25,7 +26,7 @@ describe("huecos y sugerencias", () => {
     const id = act.saveTask({title:"Mandar CV", est:30, cat:"trabajo", due:""});
     const sug = suggestSlots(sel, sel.task(id));
     expect(sug[0]).toMatchObject({rel:"Hoy", s:960, e:990, kind:"hueco libre"});
-    expect(sug.some(s => s.kind.includes("Mensajes de contacto"))).toBe(true);
+    expect(sug.some(s => s.kind.includes("Llamadas"))).toBe(true);
   });
   it("respeta la fecha límite", () => {
     const {sel, act} = makeApp();
@@ -47,7 +48,7 @@ describe("validación de bloques", () => {
     expect(validateBlock(form(), sel.blocksOf(1)).value).toMatchObject({s:"16:00", e:"17:00", l:["a", "b"]});
   });
   it("rechaza superposiciones y horarios fuera del día", () => {
-    expect(validateBlock(form({s:"15:30"}), sel.blocksOf(1)).error).toContain("Edición de contenido");
+    expect(validateBlock(form({s:"15:30"}), sel.blocksOf(1)).error).toContain("Edición");
     expect(validateBlock(form({s:"07:00", e:"08:00"}), sel.blocksOf(1)).error).toContain("08:30");
     expect(validateBlock(form({title:" "}), sel.blocksOf(1)).error).toContain("título");
   });
@@ -63,9 +64,9 @@ describe("acciones y estadísticas", () => {
     const w = sel.curWeek();
     expect(w.id).toBe("2026-S42");
     expect(w.done.d1b1).toMatchObject({cat:"estudio", min:180});
-    expect(w.planned.count).toBe(49);
+    expect(w.planned.count).toBe(14);
     const st = computeStats(sel);
-    expect(st.kpis[0].v).toBe("2%");
+    expect(st.kpis[0].v).toBe("7%");
   });
   it("dar de baja y marcar como hecho se excluyen", () => {
     const {sel, act} = makeApp();
@@ -73,14 +74,27 @@ describe("acciones y estadísticas", () => {
     expect(sel.curWeek().off.d1b1).toBeUndefined();
     expect(sel.curWeek().done.d1b1).toBeDefined();
   });
-  it("restaurar la rutina borra los bloques nuevos y repone los originales", () => {
+  it("una instalación nueva arranca vacía, solo con categorías genéricas", () => {
+    const {sel} = makeApp("dev-nuevo", "empty");
+    expect([0,1,2,3,4,5,6].flatMap(d => sel.blocksOf(d))).toHaveLength(0);
+    expect(sel.goals()).toHaveLength(0);
+    expect(sel.tasks()).toHaveLength(0);
+    expect(sel.categories().map(c => c.name)).toContain("Trabajo");
+    expect(computeStats(sel).hasData).toBe(false);
+  });
+  it("las categorías se crean, cambian y borran; lo que las usaba queda «Sin categoría»", () => {
     const {sel, act} = makeApp();
-    act.deleteBlock("d0b0");
-    const id = act.saveBlock({day:5, cat:"personal", title:"Extra", s:"15:00", e:"16:00", p:"", l:[]});
-    act.restoreBlocks();
-    expect(sel.block(id)).toBeUndefined();
-    expect(sel.block("d0b0")).toBeDefined();
-    expect(sel.planned().count).toBe(49);
+    act.deleteCategory("rutina");
+    const id = act.addCategory();
+    expect(sel.category(id).color).toBe("c8");          // el único color libre
+    act.updateCategory(id, {name:"Hogar", color:"c3"});
+    expect(sel.category(id)).toMatchObject({name:"Hogar", color:"c3"});
+    expect(act.categoryUsage("trabajo")).toBe(3);       // 3 bloques
+    act.deleteCategory("trabajo");
+    setCategories(sel.categories());
+    expect(catName("trabajo")).toBe("Sin categoría");
+    expect(catVar("trabajo")).toBe("var(--c8)");
+    expect(sel.block("d0b1").cat).toBe("trabajo");      // el bloque sigue existiendo
   });
   it("cambiar la duración de una tarea agendada ajusta su fin", () => {
     const {sel, act} = makeApp();

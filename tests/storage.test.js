@@ -3,13 +3,13 @@ import { createLocalAdapter } from "../src/storage/localAdapter.js";
 import { createSyncEngine } from "../src/storage/syncEngine.js";
 import { createMemoryRemote } from "../src/storage/memoryRemote.js";
 import { createHttpRemote } from "../src/storage/remote.js";
-import { KEYS } from "../src/storage/keys.js";
+import { KEYS, LEGACY } from "../src/storage/keys.js";
 import { memoryStorage, makeApp } from "./helpers.js";
 
 describe("guardado local y migración", () => {
   it("migra los datos del artefacto original (v2)", () => {
     const storage = memoryStorage();
-    storage.set(KEYS.legacyV2, {
+    storage.set(LEGACY.v2, {
       config:{v:1, blocks:[{id:"d0b0", day:0, s:"08:30", e:"09:00", cat:"rutina", title:"Mañana", p:"", l:[]}], goals:[{id:"gym", label:"Gym", cat:"gym", target:4}]},
       weeks:{"2026-S41":{type:"week", week:"2026-S41", label:"5/10", done:{d0b0:{cat:"rutina", min:30, day:0}}, goals:{gym:3}, planned:{count:1}}},
       tasks:{type:"tasks", items:[{id:"t1", title:"Trámite", est:30, cat:"personal", done:false}]}
@@ -19,6 +19,9 @@ describe("guardado local y migración", () => {
     expect(recs.weeks[0].type).toBeUndefined();
     expect(recs.goals[0]).toMatchObject({id:"gym", order:0});
     expect(recs.tasks[0].title).toBe("Trámite");
+    // Las categorías fijas de antes se convierten en categorías editables, solo las que se usan
+    expect(recs.categories.map(c => c.id).sort()).toEqual(["gym", "personal", "rutina"]);
+    expect(recs.categories.find(c => c.id === "gym")).toMatchObject({name:"Ejercicio", color:"c4"});
   });
   it("guarda y vuelve a leer, y conserva el id del dispositivo", () => {
     const storage = memoryStorage(), local = createLocalAdapter(storage);
@@ -26,15 +29,15 @@ describe("guardado local y migración", () => {
     expect(createLocalAdapter(storage).deviceId()).toBe(id);
     const {store} = makeApp(id);
     local.save(store.snapshot());
-    expect(local.load().blocks).toHaveLength(49);
+    expect(local.load().blocks).toHaveLength(14);
   });
 });
 
 describe("sincronización entre dispositivos", () => {
   const engines = [];
   afterEach(() => engines.splice(0).forEach(e => e.stop()));
-  function device(name, remote){
-    const app = makeApp(name), storage = memoryStorage(), statuses = [];
+  function device(name, remote, records){
+    const app = makeApp(name, records), storage = memoryStorage(), statuses = [];
     const sync = createSyncEngine({store:app.store, remote, storage, pushDelayMs:1e9, onStatus:s => statuses.push(s)});
     engines.push(sync);
     return {...app, sync, storage, statuses};
@@ -76,9 +79,10 @@ describe("sincronización entre dispositivos", () => {
     const remote = createMemoryRemote(), a = device("a", remote);
     a.act.saveBlock({day:0, cat:"rutina", title:"Mañana distinta", s:"08:30", e:"09:00", p:"", l:[]}, "d0b0");
     await a.sync.sync();
-    const b = device("b", remote);
+    const b = device("b", remote, "empty");               // instalación nueva, vacía
     await b.sync.sync();
     expect(b.sel.block("d0b0").title).toBe("Mañana distinta");
+    expect(b.sel.categories().length).toBe(8);
   });
 
   it("sin conexión guarda la cola y la sube al volver", async () => {

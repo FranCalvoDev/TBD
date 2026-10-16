@@ -27,7 +27,6 @@
 .sugg b{color:var(--ink);font-weight:600}
 .sugg span{color:var(--ink-2);font-size:.86rem}
 .done-box{margin-top:14px}
-.done-box .tip-body{padding:0 14px 14px;max-width:none}
 .done-box .task{box-shadow:none;background:var(--surface-2)}
 .flash{animation:flash 1.4s var(--ease)}
 @keyframes flash{0%,60%{box-shadow:0 0 0 3px var(--accent)}100%{box-shadow:var(--shadow-1)}}
@@ -35,3 +34,15 @@
   .task{grid-template-columns:auto 1fr;padding:14px 16px}
   .tact{grid-column:2;flex-direction:row;align-items:center;gap:18px}
 }
+
+/* Caja desplegable de tareas completadas */
+details.done-box{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow-1);overflow:hidden}
+.done-box summary{cursor:pointer;min-height:56px;padding:16px 20px;font-family:var(--display);font-weight:600;font-size:1rem;letter-spacing:-.015em;list-style:none;
+  display:flex;align-items:center;gap:12px;transition:background .15s}
+.done-box summary::-webkit-details-marker{display:none}
+.done-box summary::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--cat,var(--ink-3));flex:none}
+.done-box summary::after{content:"";margin-left:auto;width:8px;height:8px;border-right:2px solid var(--ink-3);border-bottom:2px solid var(--ink-3);
+  transform:rotate(45deg) translate(-2px,-2px);transition:transform .25s var(--ease);flex:none}
+.done-box[open] summary::after{transform:rotate(225deg) translate(-2px,-2px)}
+.done-box summary:active{background:var(--surface-2)}
+.done-list{padding:0 14px 14px}
