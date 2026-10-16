@@ -33,3 +33,6 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);color:v
 .data-msg.ok{color:var(--accent-ink)}
 .data-msg.error{color:var(--danger)}
 @media (max-width:520px){.data-actions .btn{flex:1 1 auto}}
+
+/* Horas y números con la tipografía de títulos (Chakra Petch) */
+.hero .when,.axis span,.blk .h,.item .tm,.dh .p,.kpi .v,.goal .num,.chip small,.tchip,.hbar .nb,.dlg-head .dt,.chart svg text{font-family:var(--numeric)}

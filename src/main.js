@@ -1,5 +1,8 @@
 // Punto de entrada: arma los datos, la lógica y la interfaz, y las conecta.
 import "@fontsource-variable/inter";
+import "@fontsource/chakra-petch/500.css";
+import "@fontsource/chakra-petch/600.css";
+import "@fontsource/chakra-petch/700.css";
 import "./styles/tokens.css";
 import "./styles/base.css";
 import "./styles/hero.css";

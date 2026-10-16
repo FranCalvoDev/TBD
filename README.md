@@ -73,7 +73,8 @@ El flujo es siempre el mismo: **la UI llama a una acción → la acción escribe
 
 Estilo claro tipo Apple con neutros industriales (negro, grafito, gris, plata, blanco) y verde como acento. El tema claro es el predeterminado; el oscuro se activa con el botón de la barra superior.
 
-- `src/styles/tokens.css`: toda la paleta, tipografía (San Francisco en Apple, Inter en el resto), radios y sombras. Para cambiar la apariencia, empezar por acá.
+- `src/styles/tokens.css`: toda la paleta, tipografía, radios y sombras. Para cambiar la apariencia, empezar por acá.
+- Tipografía: **Chakra Petch** (industrial/techno) en títulos, horas y números; **Inter** (San Francisco en Apple) en el texto. Las dos van incluidas en la app y funcionan sin conexión.
 - Los colores de categoría están validados para que se distingan entre sí (también con daltonismo); el texto siempre va en tinta y el color identifica con un punto o una barra.
 - En el celular (menos de 820 px): barra compacta, control segmentado de días, botones de 44 px como mínimo y diálogos como hoja que sube desde abajo.
 

@@ -24,8 +24,11 @@
   --c1:#285FA8; --c2:#00A82D; --c3:#9277E0; --c4:#C8561A;
   --c5:#B23A7C; --c6:#A08A10; --c7:#0090A0; --c8:#8E8E93;
 
-  /* Tipografía: San Francisco en Apple, Inter (incluida en la app, funciona sin conexión) en el resto */
-  --display:-apple-system, "SF Pro Display", "Inter Variable", "Inter", BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Tipografía (incluida en la app, funciona sin conexión):
+     --display y --numeric: Chakra Petch, industrial/techno, para títulos, horas y números.
+     --body: San Francisco en Apple, Inter en el resto, para el texto corrido. */
+  --display:"Chakra Petch", "Inter Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --numeric:var(--display);
   --body:-apple-system, "SF Pro Text", "Inter Variable", "Inter", BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
   /* Forma y movimiento */
