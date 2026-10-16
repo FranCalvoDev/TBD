@@ -99,3 +99,5 @@ commit;
 --   alter table tbd_records enable row level security;
 --   create policy "solo lo propio" on tbd_records
 --     for all using (user_id = auth.uid()) with check (user_id = auth.uid());
+-- Las funciones corren con los permisos de quien las llama, así que con esta política activa
+-- nadie puede leer ni escribir datos de otro usuario aunque mande otro p_user.

@@ -83,5 +83,5 @@ Cualquier servicio sirve si se escribe un objeto con `pull`, `push` y, opcionalm
 const {store, sync} = initData({remote: miBackend, onStatus: showSyncStatus});
 ```
 
-- **Supabase**: ejecuta `sql/schema.sql` en el editor SQL y activa la seguridad por fila (las líneas comentadas al final). Desde la app, `push` llama a `supabase.rpc("tbd_push", {p_user, p_changes})` y `pull` a `supabase.rpc("tbd_pull", {p_user, p_since})`; `subscribe` puede escuchar Realtime sobre `tbd_records`.
+- **Supabase**: ejecuta `sql/schema.sql` en el editor SQL y activa la seguridad por fila (las líneas comentadas al final). Desde la app, `push` llama a `supabase.rpc("tbd_push", {p_user, p_changes})` y `pull` a `supabase.rpc("tbd_pull", {p_user, p_since})`; `subscribe` puede escuchar Realtime sobre `tbd_records`. Con la seguridad por fila activa, aunque alguien mande otro `p_user` solo puede leer y escribir lo suyo, porque las funciones corren con los permisos de quien llama.
 - **Firebase / Firestore**: un documento por registro en `users/{uid}/{col}/{id}`; la regla de conflictos se aplica en una transacción y `pull` consulta por un campo de orden del servidor.
