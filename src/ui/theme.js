@@ -14,8 +14,8 @@ export function initTheme(storage = safeStorage()){
     $("themeBtn").textContent = t === "dark" ? "Tema claro" : "Tema oscuro";
   };
   apply((storage.get(KEYS.theme) ?? storage.get(LEGACY.theme)) === "dark" ? "dark" : "light");
-  $("themeBtn").addEventListener("click", () => {
-    const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-    apply(next); storage.set(KEYS.theme, next);
-  });
+  const get = () => root.getAttribute("data-theme") === "dark" ? "dark" : "light";
+  const set = t => { const v = t === "dark" ? "dark" : "light"; apply(v); storage.set(KEYS.theme, v); };
+  $("themeBtn").addEventListener("click", () => set(get() === "dark" ? "light" : "dark"));
+  return {get, set};
 }

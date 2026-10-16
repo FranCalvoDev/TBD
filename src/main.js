@@ -29,6 +29,7 @@ import { createCategoryEditor } from "./ui/categoryEditor.js";
 import { setCategories } from "./state/categories.js";
 import { bindWeekControls } from "./ui/weekControls.js";
 import { initTheme } from "./ui/theme.js";
+import { initBackup } from "./ui/backup.js";
 import { showSyncStatus } from "./ui/syncStatus.js";
 import { initNative } from "./native.js";
 
@@ -63,7 +64,8 @@ Object.assign(sections, {
 });
 
 bindWeekControls(ctx);
-initTheme();
+const theme = initTheme();
+initBackup(ctx, theme);
 initNative();
 // El registro de categorías se actualiza antes de redibujar.
 setCategories(sel.categories());

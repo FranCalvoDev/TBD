@@ -1,6 +1,8 @@
-# ToBeDone - week&Goals Manager
+# TBD · MiSemana
 
-Planificador semanal personal: semana tipo con bloques, tareas únicas que se ubican en los huecos libres, metas semanales y estadísticas. Funciona sin conexión y está preparado para sincronizar entre dispositivos con una base de datos.
+**ToBeDone — week & goals manager.** Planificador semanal: semana tipo con bloques, tareas únicas que se ubican en los huecos libres, metas semanales y estadísticas. Funciona sin conexión y está preparado para sincronizar entre dispositivos con una base de datos.
+
+La app se instala **vacía**: cada persona crea sus categorías, bloques, tareas y metas. Nada personal viaja en el código.
 
 ## App de Android
 
@@ -8,6 +10,7 @@ La app se empaqueta como app nativa de Android con [Capacitor](https://capacitor
 
 - **Descargar:** cada push compila el APK en GitHub Actions (pestaña *Actions* → *App Android* → artefacto). En `main` además se publica en *Releases*, con enlace directo para abrir desde el teléfono.
 - **Instalar:** abrir el APK en el teléfono y aceptar «instalar apps de origen desconocido» la primera vez. Las versiones nuevas se instalan encima y conservan los datos.
+- **Id de la app:** `com.francalvodev.tbd`. Cambiarlo después obliga a desinstalar y perder los datos del teléfono (salvo que se exporte una copia antes).
 - **Firma:** para que las actualizaciones se instalen encima (y para Play Store), cargar los secretos `ANDROID_KEYSTORE_BASE64` y `ANDROID_KEYSTORE_PASSWORD` en *Settings → Secrets and variables → Actions*. Sin ellos el APK es de prueba.
 - **Desarrollo local** (con Android Studio instalado): `npm run android` copia la web al proyecto `android/` y `npm run android:open` lo abre en Android Studio.
 - **Ícono y pantalla de inicio:** se generan desde `assets/` con `npx capacitor-assets generate --android`.
@@ -26,11 +29,13 @@ npm run build     # versión final en dist/ (se puede subir tal cual a GitHub Pa
 ## Funcionalidades
 
 - **Ahora mismo**: el bloque en curso, cuánto falta y qué sigue.
-- **Semana tipo**: grilla de lunes a domingo (vista por día en el celular) con filtro por categoría. Cada bloque tiene tips, se puede marcar como hecho, dar de baja esta semana, editar o eliminar.
+- **Categorías**: cada persona crea las suyas, con nombre y uno de los 8 colores de la paleta. La app trae algunas genéricas para empezar, que se pueden renombrar o borrar.
+- **Semana tipo**: grilla de lunes a domingo (vista por día en el celular) con filtro por categoría. Cada bloque tiene notas y tips propios, se puede marcar como hecho, dar de baja esta semana, editar o eliminar.
 - **Tareas**: tareas únicas con tiempo estimado, categoría y fecha límite. La app sugiere huecos libres o bloques liberados y las agenda en la grilla.
 - **Metas de la semana**: contadores editables; cada lunes empieza una semana nueva.
 - **Estadísticas**: cumplimiento por semana y por día, horas por área, metas y tareas completadas.
-- **Primer mes de contenido**, **Tips** y tema claro/oscuro.
+- **Tus datos**: exportar e importar una copia de seguridad (archivo JSON). En Android se comparte a Drive, correo o Archivos; en el navegador se descarga.
+- Tema claro/oscuro.
 
 ## Estructura
 
@@ -43,7 +48,7 @@ src/
   main.js             punto de entrada: conecta datos, lógica e interfaz
   native.js           integración con Android: botón atrás y barra de estado
   styles/             CSS por sección (tokens y temas, grilla, tareas, metas, diálogos…)
-  data/               contenido fijo: categorías, semana tipo, metas por defecto, plan de contenido y tips
+  data/               días, paleta de colores y categorías iniciales genéricas
   core/               utilidades sin dependencias: tiempo, reloj, escape de HTML, localStorage seguro
   domain/             reglas de negocio puras (sin DOM): huecos libres, sugerencias, validación, estadísticas
   state/              store con registros versionados, selectores memorizados y acciones (todas las escrituras)
@@ -72,12 +77,21 @@ Estilo claro tipo Apple con neutros industriales (negro, grafito, gris, plata, b
 - Los colores de categoría están validados para que se distingan entre sí (también con daltonismo); el texto siempre va en tinta y el color identifica con un punto o una barra.
 - En el celular (menos de 820 px): barra compacta, control segmentado de días, botones de 44 px como mínimo y diálogos como hoja que sube desde abajo.
 
+## Privacidad y copias de seguridad
+
+El repositorio es público, así que **no contiene datos de nadie**: ni rutinas, ni metas, ni preferencias.
+
+- Los datos de cada persona viven en su dispositivo (y en su base de datos, si conecta una).
+- La copia de seguridad se exporta desde la sección *Tus datos* y queda solo donde la persona la guarde.
+- `.gitignore` ignora `tbd-copia*.json` y `*.tbd.json` para que una copia no se suba por error.
+- Importar una copia reemplaza todo lo que hay en la app por lo de la copia (pide confirmación).
+
 ## Datos y sincronización
 
-Los datos se guardan como registros en cuatro colecciones: `blocks`, `goals`, `tasks` y `weeks`. Cada registro tiene `updatedAt` y `deviceId`, y borrar deja una lápida; así cualquier base de datos puede sincronizar dispositivos resolviendo conflictos registro por registro.
+Los datos se guardan como registros en cinco colecciones: `categories`, `blocks`, `goals`, `tasks` y `weeks`. Cada registro tiene `updatedAt` y `deviceId`, y borrar deja una lápida; así cualquier base de datos puede sincronizar dispositivos resolviendo conflictos registro por registro.
 
 - **Sin configurar nada**: todo queda en el navegador (localStorage) y se comparte entre pestañas.
-- **Con base de datos**: definir `VITE_SYNC_URL` (ver `.env.example`) o pasar otro backend a `initData`. Los cambios se encolan, funcionan sin conexión y se suben al volver. Detalles en [docs/BASE_DE_DATOS.md](docs/BASE_DE_DATOS.md).
+- **Con base de datos**: la conexión se hace aparte. Hay dos caminos: definir `VITE_SYNC_URL` con una API que cumpla el contrato HTTP, o escribir un objeto con `pull`/`push` y pasarlo a `initData({remote})` en `src/main.js`. Los cambios se encolan, funcionan sin conexión y se suben al volver. Contrato, esquema y ejemplos en [docs/BASE_DE_DATOS.md](docs/BASE_DE_DATOS.md).
 
 Esta hecho a mi medida, pero es un programa muy moldeable asi que se puede ajustar a quien lo necesite
 xoxo

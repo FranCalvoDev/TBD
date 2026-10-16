@@ -67,6 +67,19 @@
     <div id="stats"></div>
   </section>
 
+  <section id="datos">
+    <h2>Tus datos</h2>
+    <p class="sub" id="dataSub">Todo se guarda solo en este dispositivo: nadie más tiene acceso. Exporta una copia para guardarla donde quieras (Drive, correo, tu computadora) o para pasar tus datos a otro teléfono.</p>
+    <div class="data-card">
+      <div class="data-actions">
+        <button class="btn primary" id="exportBtn" type="button">Exportar copia</button>
+        <button class="btn" id="importBtn" type="button">Importar copia</button>
+        <input type="file" id="importFile" accept="application/json,.json" hidden>
+      </div>
+      <p class="data-msg" id="dataMsg" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
 </div>
 
 <dialog id="dlg">
