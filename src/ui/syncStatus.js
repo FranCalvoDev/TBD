@@ -6,7 +6,8 @@ const STATES = {
   syncing: ["saving", "Sincronizando"],
   synced:  ["cloud",  "Sincronizado"],
   offline: ["error",  "Sin conexión. Se sincroniza al volver."],
-  error:   ["error",  "No se pudo sincronizar. Reintentando."]
+  // Lo normal fuera de casa (servidor en la red local): los cambios se guardan y se suben al volver.
+  error:   ["error",  "Sin conexión con tu servidor. Se sincroniza al volver."]
 };
 
 export function showSyncStatus(status){
