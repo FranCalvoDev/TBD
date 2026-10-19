@@ -1,5 +1,6 @@
 /* Base y elementos comunes */
 *,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
 html{scroll-padding-top:calc(var(--inset-top) + 72px);-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.47;letter-spacing:-.011em;
   -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-tap-highlight-color:transparent}
@@ -36,3 +37,13 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);color:v
 
 /* Horas y números con la tipografía de títulos (Chakra Petch) */
 .hero .when,.axis span,.blk .h,.item .tm,.dh .p,.kpi .v,.goal .num,.chip small,.tchip,.hbar .nb,.dlg-head .dt,.chart svg text{font-family:var(--numeric)}
+
+/* Sincronizar con tu servidor */
+.sync-card{margin-top:12px}
+.sync-card h3{font-family:var(--display);font-weight:600;font-size:1.05rem;margin:0 0 4px;letter-spacing:-.01em}
+.data-help{margin:0 0 14px;color:var(--ink-2);font-size:.9rem}
+.sync-form{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end}
+.sync-form label{margin-bottom:0}
+.sync-on p{margin:0 0 12px}
+.sync-on b{font-family:var(--numeric);font-weight:600}
+@media (max-width:620px){.sync-form{grid-template-columns:1fr}.sync-form .btn{width:100%}}

@@ -23,7 +23,6 @@ async function saveFile(name, text){
 export function initBackup(ctx, theme){
   const msg = $("dataMsg"), file = $("importFile");
   const say = (text, kind = "") => { msg.textContent = text; msg.className = "data-msg " + kind; };
-  if (ctx.sync) $("dataSub").textContent = "Tus datos se guardan en este dispositivo y se sincronizan con tu cuenta. También puedes exportar una copia para guardarla donde quieras.";
 
   $("exportBtn").addEventListener("click", async () => {
     try {

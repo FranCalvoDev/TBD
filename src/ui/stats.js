@@ -13,8 +13,8 @@ const hrs = m => (m/60).toFixed(1).replace(".0", "");
 export function createStats(ctx){
   const el = $("stats");
   return function render(){
-    $("statsSub").textContent = ctx.sync
-      ? "Se calculan con todo lo que marcas y sumas, y se sincronizan entre tus dispositivos."
+    $("statsSub").textContent = ctx.sync.enabled
+      ? "Se calculan con todo lo que marcas y sumas, y se sincronizan con tu servidor."
       : "Se calculan con todo lo que marcas y sumas en este dispositivo.";
     const st = computeStats(ctx.sel);
     if (!st.hasData) { el.innerHTML = `<div class="empty">Tus estadísticas aparecen a medida que marcas bloques como hechos y sumas metas. Empieza por el bloque en el que estás ahora.</div>`; return; }

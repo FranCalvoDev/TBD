@@ -9,6 +9,9 @@
     "SystemBars": {
       "insetsHandling": "css",
       "style": "LIGHT"
+    },
+    "CapacitorHttp": {
+      "enabled": true
     }
   }
 }

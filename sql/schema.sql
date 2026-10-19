@@ -1,11 +1,22 @@
 -- TBD · MiSemana — base de datos para sincronizar entre dispositivos (PostgreSQL 13 o superior).
--- Se ejecuta tal cual, por ejemplo:  psql "$DATABASE_URL" -f sql/schema.sql
+-- El servidor autoalojado (selfhost/) lo aplica solo al arrancar. También se puede ejecutar a mano:
+--   psql "$DATABASE_URL" -f sql/schema.sql
 -- Se puede volver a ejecutar sin perder datos: todo usa IF NOT EXISTS / CREATE OR REPLACE.
 --
 -- Una fila por registro de la app. La regla de conflictos es la misma que en la app
 -- (isNewer en src/state/store.js): gana updated_at mayor y, si empatan, device_id mayor.
 
 begin;
+
+-- Personas que usan el servidor. La clave de acceso se guarda solo como hash SHA-256:
+-- quien tenga la base de datos no puede leer las claves.
+create table if not exists tbd_users (
+  id         uuid        primary key default gen_random_uuid(),
+  name       text        not null unique,
+  token_hash text        not null unique,
+  created_at timestamptz not null default now(),
+  revoked    boolean     not null default false
+);
 
 create sequence if not exists tbd_records_seq;
 
@@ -91,13 +102,6 @@ $$;
 
 commit;
 
--- Uso desde tu API (el usuario sale del token de sesión, nunca del cuerpo de la petición):
+-- Uso desde el servidor (el usuario sale de la clave de acceso, nunca del cuerpo de la petición):
 --   select tbd_push($1::uuid, $2::jsonb);   -- POST /changes  → responde 204
 --   select tbd_pull($1::uuid, $2::bigint);  -- GET  /changes  → responde el JSON tal cual
---
--- Si usas Supabase, agrega además seguridad por fila para que cada uno vea solo lo suyo:
---   alter table tbd_records enable row level security;
---   create policy "solo lo propio" on tbd_records
---     for all using (user_id = auth.uid()) with check (user_id = auth.uid());
--- Las funciones corren con los permisos de quien las llama, así que con esta política activa
--- nadie puede leer ni escribir datos de otro usuario aunque mande otro p_user.

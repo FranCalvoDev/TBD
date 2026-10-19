@@ -1,8 +1,6 @@
-# Conectar una base de datos
+# Base de datos y sincronización
 
-> **Privacidad:** el repositorio es público. Las claves y URLs de tu base de datos van en variables de entorno (`.env`, ignorado por git) o en los secretos de GitHub Actions, nunca en el código. Cada usuario solo debe poder leer y escribir sus propias filas (por ejemplo, con Row Level Security por `user_id`).
-
-La app ya tiene todo el lado del cliente: cola de cambios sin conexión, reintentos, resolución de conflictos y migración. Para sincronizar entre dispositivos falta un backend que cumpla el contrato de `src/storage/remote.js`.
+El servidor listo para usar está en [`selfhost/`](../selfhost) y se instala con la guía [AUTOALOJADO.md](AUTOALOJADO.md). Este documento describe lo que hay por dentro, por si alguien quiere adaptar el servidor o escribir otro.
 
 ## Modelo de datos
 
@@ -29,15 +27,14 @@ Cuando llegan dos versiones del mismo registro gana la de `updatedAt` mayor; si 
 
 **Límite conocido:** una semana es un solo registro. Si dos dispositivos sin conexión marcan bloques distintos de la misma semana, al sincronizar queda solo la última versión. Si eso molesta, el siguiente paso es separar cada marca y cada meta semanal en su propio registro.
 
-## Configuración sin exponer datos
+## Configuración
 
-- **Desarrollo:** copia `.env.example` a `.env` y completa `VITE_SYNC_URL`. `.env` está en `.gitignore`.
-- **APK en GitHub Actions:** crea la variable `VITE_SYNC_URL` en *Settings → Secrets and variables → Actions → Variables*. El workflow la usa al compilar. Si tu backend necesita otras variables públicas (por ejemplo la URL y la clave anónima de Supabase), agrégalas igual y pásalas en el paso «Compilar la web» de `.github/workflows/android.yml`.
-- Todo lo que empieza con `VITE_` termina dentro de la app compilada: úsalo solo para valores pensados para ser públicos (URLs, claves anónimas). Las claves de servidor nunca van en la app.
+- La app no trae direcciones ni claves. Cada dispositivo guarda su propio servidor (dirección, clave y nombre) en `localStorage` (`tbd:servidor`); no se sincroniza ni entra en las copias de seguridad.
+- El servidor lee su configuración de `selfhost/.env` (contraseña de la base, puerto y dominio). Ese archivo nunca se sube al repositorio.
 
 ## Contrato de la API
 
-Por defecto se usa `createHttpRemote` con `VITE_SYNC_URL`:
+La app usa `createHttpRemote` (`src/storage/remote.js`) contra el servidor configurado:
 
 ```
 GET  /changes?since=<cursor>   → 200 {"changes": [{"col": "tasks", "rec": {...}}], "cursor": 123}
@@ -47,7 +44,8 @@ POST /changes  {"changes": [...]}  → 204
 
 - `cursor` es un número que crece con cada escritura aceptada en el servidor. El cliente lo guarda y lo envía en el siguiente pull.
 - El POST guarda cada registro solo si le gana al que ya existe (regla de arriba). Los que pierden se ignoran sin error.
-- La autenticación va en `Authorization: Bearer <token>` (`getToken` en `createHttpRemote`). El servidor deduce el usuario del token; nunca del cuerpo.
+- La autenticación va en `Authorization: Bearer <clave de acceso>`. El servidor deduce la persona de la clave, nunca del cuerpo.
+- `GET /me` devuelve `{"name": "..."}`: la app lo usa para probar la dirección y la clave antes de conectar.
 
 `src/storage/memoryRemote.js` implementa este mismo comportamiento en memoria y los tests de `tests/storage.test.js` lo usan como servidor: sirve de especificación ejecutable.
 
@@ -59,7 +57,7 @@ El script listo para ejecutar está en [`sql/schema.sql`](../sql/schema.sql) (Po
 psql "$DATABASE_URL" -f sql/schema.sql
 ```
 
-Crea la tabla `tbd_records` y dos funciones que implementan el contrato de arriba, así la API solo tiene que llamarlas:
+Crea las tablas `tbd_users` (personas y hash de sus claves) y `tbd_records`, y dos funciones que implementan el contrato de arriba, así la API solo tiene que llamarlas:
 
 | Endpoint | Consulta | Respuesta |
 |---|---|---|
@@ -73,15 +71,7 @@ Qué resuelve el script:
 - Si un lote trae el mismo registro dos veces, se queda con el más nuevo en vez de fallar.
 - Ignora colecciones desconocidas o registros sin `id` sin rechazar el resto del lote.
 - Se puede volver a ejecutar sin perder datos.
-- Al final tiene, comentadas, las reglas de seguridad por fila para Supabase.
 
-## Otros backends
+## Otros servidores
 
-Cualquier servicio sirve si se escribe un objeto con `pull`, `push` y, opcionalmente, `subscribe` (para avisos en tiempo real), y se pasa en `src/main.js`:
-
-```js
-const {store, sync} = initData({remote: miBackend, onStatus: showSyncStatus});
-```
-
-- **Supabase**: ejecuta `sql/schema.sql` en el editor SQL y activa la seguridad por fila (las líneas comentadas al final). Desde la app, `push` llama a `supabase.rpc("tbd_push", {p_user, p_changes})` y `pull` a `supabase.rpc("tbd_pull", {p_user, p_since})`; `subscribe` puede escuchar Realtime sobre `tbd_records`. Con la seguridad por fila activa, aunque alguien mande otro `p_user` solo puede leer y escribir lo suyo, porque las funciones corren con los permisos de quien llama.
-- **Firebase / Firestore**: un documento por registro en `users/{uid}/{col}/{id}`; la regla de conflictos se aplica en una transacción y `pull` consulta por un campo de orden del servidor.
+Cualquier servidor que cumpla el contrato de arriba sirve (por ejemplo, uno sobre SQLite). También se puede escribir un objeto con `pull`, `push` y, opcionalmente, `subscribe` y pasarlo a `initData({remote})` en `src/main.js`.

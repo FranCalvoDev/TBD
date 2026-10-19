@@ -1,0 +1,5 @@
+# HTTPS automático (Let's Encrypt) para el dominio de TBD_DOMAIN.
+{$TBD_DOMAIN} {
+	encode gzip
+	reverse_proxy servidor:8787
+}
