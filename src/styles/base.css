@@ -36,3 +36,13 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);color:v
 
 /* Horas y números con la tipografía de títulos (Chakra Petch) */
 .hero .when,.axis span,.blk .h,.item .tm,.dh .p,.kpi .v,.goal .num,.chip small,.tchip,.hbar .nb,.dlg-head .dt,.chart svg text{font-family:var(--numeric)}
+
+/* Sincronizar con tu servidor */
+.sync-card{margin-top:12px}
+.sync-card h3{font-family:var(--display);font-weight:600;font-size:1.05rem;margin:0 0 4px;letter-spacing:-.01em}
+.data-help{margin:0 0 14px;color:var(--ink-2);font-size:.9rem}
+.sync-form{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end}
+.sync-form label{margin-bottom:0}
+.sync-on p{margin:0 0 12px}
+.sync-on b{font-family:var(--numeric);font-weight:600}
+@media (max-width:620px){.sync-form{grid-template-columns:1fr}.sync-form .btn{width:100%}}

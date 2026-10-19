@@ -10,8 +10,10 @@ import { KEYS } from "./keys.js";
 
 const keyOf = c => c.col + ":" + c.rec.id;
 
-export function createSyncEngine({store, remote, storage, onStatus = () => {}, pushDelayMs = 800, pullEveryMs = 30000}){
-  let cursor = storage.get(KEYS.cursor);
+export function createSyncEngine({store, remote, storage, onStatus: report = () => {}, pushDelayMs = 800, pullEveryMs = 30000}){
+  let cursor = storage.get(KEYS.cursor), stopped = false;
+  // Un motor detenido no avisa nada (una sincronización en curso puede terminar después de desconectar).
+  const onStatus = (...a) => { if (!stopped) report(...a); };
   let running = null, again = false, retries = 0, timer = null, poll = null, unsubRemote = null;
 
   // La cola se lee y escribe siempre desde el almacenamiento: varias pestañas la comparten.
@@ -26,7 +28,7 @@ export function createSyncEngine({store, remote, storage, onStatus = () => {}, p
     sent.forEach(c => { const cur = box.get(keyOf(c)); if (cur && cur.rec.updatedAt === c.rec.updatedAt) box.delete(keyOf(c)); });
     storage.set(KEYS.outbox, [...box.values()]);
   }
-  const schedule = ms => { clearTimeout(timer); timer = setTimeout(() => { timer = null; sync(); }, ms); };
+  const schedule = ms => { if (stopped) return; clearTimeout(timer); timer = setTimeout(() => { timer = null; sync(); }, ms); };
 
   const unsubStore = store.subscribe(e => {
     if (e.origin !== "local") return;
@@ -50,6 +52,7 @@ export function createSyncEngine({store, remote, storage, onStatus = () => {}, p
   }
 
   async function sync(){
+    if (stopped) return;
     if (running) { again = true; return running; }
     running = run().catch(err => {
       retries++;
@@ -78,6 +81,7 @@ export function createSyncEngine({store, remote, storage, onStatus = () => {}, p
       unsubRemote = remote.subscribe?.(() => schedule(0)) || null;
     },
     stop(){
+      stopped = true;
       clearTimeout(timer); clearInterval(poll); unsubStore(); unsubRemote?.();
       if (typeof window !== "undefined") {
         window.removeEventListener("online", onWake);

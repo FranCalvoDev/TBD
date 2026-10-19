@@ -1,0 +1,6 @@
+# Contexto de la imagen del servidor: solo hace falta selfhost/ y sql/.
+*
+!selfhost/package.json
+!selfhost/package-lock.json
+!selfhost/*.js
+!sql/schema.sql

@@ -4,6 +4,7 @@ export const KEYS = {
   device: "tbd:device",
   outbox: "tbd:outbox",
   cursor: "tbd:cursor",
+  server: "tbd:servidor",
   theme: "tbd:tema"
 };
 

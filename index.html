@@ -78,6 +78,23 @@
       </div>
       <p class="data-msg" id="dataMsg" role="status" aria-live="polite"></p>
     </div>
+    <div class="data-card sync-card">
+      <h3>Sincronizar con tu servidor</h3>
+      <p class="data-help">Si tu grupo tiene un servidor TBD propio, conecta este dispositivo con la dirección y la clave que te dieron. Tus datos viajan solo a ese servidor.</p>
+      <div class="form sync-form" id="syncForm">
+        <label>Dirección del servidor<input id="srvUrl" inputmode="url" placeholder="http://192.168.1.10:8787" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+        <label>Clave de acceso<input id="srvKey" type="password" placeholder="tbd_…" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+        <button class="btn primary" id="srvConnect" type="button">Conectar</button>
+      </div>
+      <div class="sync-on" id="syncOn" hidden>
+        <p>Conectado a <b id="srvShown"></b> como <b id="srvUser"></b>.</p>
+        <div class="data-actions">
+          <button class="btn" id="srvNow" type="button">Sincronizar ahora</button>
+          <button class="btn danger" id="srvOff" type="button">Desconectar</button>
+        </div>
+      </div>
+      <p class="data-msg" id="syncMsg" role="status" aria-live="polite"></p>
+    </div>
   </section>
 
 </div>

@@ -40,9 +40,6 @@ jobs:
         run: npm test
 
       - name: Compilar la web y copiarla al proyecto Android
-        env:
-          # Opcional: URL de la API de sincronización (Settings → Secrets and variables → Actions → Variables).
-          VITE_SYNC_URL: ${{ vars.VITE_SYNC_URL }}
         run: npm run build && npx cap sync android
 
       - name: Preparar la clave de firma

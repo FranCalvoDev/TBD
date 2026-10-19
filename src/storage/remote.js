@@ -1,5 +1,5 @@
 // Contrato con la base de datos remota. Cualquier backend que lo cumpla sirve
-// (API propia sobre Postgres, Supabase, Firebase, etc.). Ver docs/BASE_DE_DATOS.md.
+// (el servidor de selfhost/ u otro propio). Ver docs/BASE_DE_DATOS.md.
 //
 // interface Remote {
 //   pull(cursor: string|number|null): Promise<{changes: Change[], cursor: string|number}>
@@ -12,6 +12,25 @@
 //     Opcional: avisa en tiempo real que hay cambios para traer.
 // }
 // type Change = { col: "blocks"|"goals"|"tasks"|"weeks", rec: { id, updatedAt, deviceId, deleted?, ... } }
+
+/**
+ * Prueba la dirección y la clave contra GET /me. Devuelve {name} o lanza un Error con
+ * un mensaje para mostrar.
+ */
+export async function checkServer({baseUrl, token, fetchImpl = (...a) => fetch(...a), timeoutMs = 10000}){
+  const ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
+  const timer = ctrl && setTimeout(() => ctrl.abort(), timeoutMs);
+  let res;
+  try {
+    res = await fetchImpl(baseUrl.replace(/\/$/, "") + "/me", {headers:{Authorization:`Bearer ${token}`}, signal:ctrl?.signal});
+  } catch {
+    throw new Error("No se pudo conectar con el servidor. Revisa la dirección y que estés en la misma red (o conectado a la VPN).");
+  } finally { clearTimeout(timer); }
+  if (res.status === 401) throw new Error("La clave de acceso no es válida o fue bloqueada.");
+  if (!res.ok) throw new Error(`El servidor respondió con un error (${res.status}). ¿Es un servidor TBD?`);
+  try { const me = await res.json(); if (me?.name) return me; } catch {}
+  throw new Error("La dirección responde, pero no parece un servidor TBD.");
+}
 
 /** Remoto HTTP genérico: GET /changes?since=<cursor> y POST /changes {changes}. */
 export function createHttpRemote({baseUrl, getToken = async () => null, fetchImpl = (...a) => fetch(...a)}){

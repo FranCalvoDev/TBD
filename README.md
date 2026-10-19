@@ -35,6 +35,7 @@ npm run build     # versión final en dist/ (se puede subir tal cual a GitHub Pa
 - **Metas de la semana**: contadores editables; cada lunes empieza una semana nueva.
 - **Estadísticas**: cumplimiento por semana y por día, horas por área, metas y tareas completadas.
 - **Tus datos**: exportar e importar una copia de seguridad (archivo JSON). En Android se comparte a Drive, correo o Archivos; en el navegador se descarga.
+- **Sincronizar con tu servidor**: cada grupo puede levantar su propio servidor (Docker) y conectar sus dispositivos con una dirección y una clave de acceso. Sin cuentas en internet. Guía: [docs/AUTOALOJADO.md](docs/AUTOALOJADO.md).
 - Tema claro/oscuro.
 
 ## Estructura
@@ -55,8 +56,10 @@ src/
   storage/            guardado local, migración de versiones viejas y sincronización con la base de datos
   ui/                 una pieza por sección de la pantalla; dibujan desde el estado y llaman acciones
 tests/                tests de Vitest para core, domain, state y storage
-docs/BASE_DE_DATOS.md cómo conectar una base de datos
-sql/schema.sql        tabla y funciones de sincronización para PostgreSQL, listas para ejecutar
+selfhost/             servidor de sincronización autoalojado (Docker Compose, PostgreSQL, gestión de claves)
+sql/schema.sql        tablas y funciones de sincronización para PostgreSQL
+docs/AUTOALOJADO.md   guía paso a paso para levantar un servidor propio
+docs/BASE_DE_DATOS.md modelo de datos y contrato de sincronización
 ```
 
 El flujo es siempre el mismo: **la UI llama a una acción → la acción escribe en el store → el store avisa → se redibujan solo las secciones afectadas** y, en paralelo, se guarda la copia local y se encola el cambio para la base de datos.
@@ -90,10 +93,11 @@ El repositorio es público, así que **no contiene datos de nadie**: ni rutinas,
 
 ## Datos y sincronización
 
-Los datos se guardan como registros en cinco colecciones: `categories`, `blocks`, `goals`, `tasks` y `weeks`. Cada registro tiene `updatedAt` y `deviceId`, y borrar deja una lápida; así cualquier base de datos puede sincronizar dispositivos resolviendo conflictos registro por registro.
+Los datos se guardan como registros en cinco colecciones: `categories`, `blocks`, `goals`, `tasks` y `weeks`. Cada registro tiene `updatedAt` y `deviceId`, y borrar deja una lápida, así los dispositivos se sincronizan resolviendo conflictos registro por registro.
 
-- **Sin configurar nada**: todo queda en el navegador (localStorage) y se comparte entre pestañas.
-- **Con base de datos**: la conexión se hace aparte. Hay dos caminos: definir `VITE_SYNC_URL` con una API que cumpla el contrato HTTP, o escribir un objeto con `pull`/`push` y pasarlo a `initData({remote})` en `src/main.js`. Los cambios se encolan, funcionan sin conexión y se suben al volver. Contrato, esquema y ejemplos en [docs/BASE_DE_DATOS.md](docs/BASE_DE_DATOS.md).
+- **Sin servidor** (lo predeterminado): todo queda en el dispositivo y se comparte entre pestañas del navegador.
+- **Con un servidor propio**: quien administra el servidor del grupo crea una clave para cada persona; en la app se completa la dirección y la clave en *Tus datos → Sincronizar con tu servidor*. Los cambios se encolan, funcionan sin conexión y se suben al volver. Paso a paso en [docs/AUTOALOJADO.md](docs/AUTOALOJADO.md).
+- La app no trae ninguna dirección ni clave: cada grupo configura la suya en sus dispositivos.
 
 Esta hecho a mi medida, pero es un programa muy moldeable asi que se puede ajustar a quien lo necesite
 xoxo
