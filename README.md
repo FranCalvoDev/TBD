@@ -32,6 +32,8 @@ npm run build     # versión final en dist/ (se puede subir tal cual a GitHub Pa
 - **Categorías**: cada persona crea las suyas, con nombre y uno de los 8 colores de la paleta. La app trae algunas genéricas para empezar, que se pueden renombrar o borrar.
 - **Semana tipo**: grilla de lunes a domingo (vista por día en el celular) con filtro por categoría. Cada bloque tiene notas y tips propios, se puede marcar como hecho, dar de baja esta semana, editar o eliminar.
 - **Tareas**: tareas únicas con tiempo estimado, categoría y fecha límite. La app sugiere huecos libres o bloques liberados y las agenda en la grilla.
+- **Entrenamiento**: rutinas por días con ejercicios (series, RIR, descanso), calentamiento y claves; plan semanal con variantes (por ejemplo con y sin partido); semanas del programa; registro de cada sesión (peso × reps, tiempo, distancia o texto, y una sensación tipo semáforo); registro de cargas por semana y guía de referencia. Cada persona crea la suya o importa un paquete.
+- **Notas**: tips y recordatorios con categoría. Las fijadas y las de la categoría del bloque en curso aparecen debajo del bloque «ahora», junto con el entrenamiento del día.
 - **Metas de la semana**: contadores editables; cada lunes empieza una semana nueva.
 - **Estadísticas**: cumplimiento por semana y por día, horas por área, metas y tareas completadas.
 - **Tus datos**: exportar e importar una copia de seguridad (archivo JSON). En Android se comparte a Drive, correo o Archivos; en el navegador se descarga.
@@ -90,10 +92,11 @@ El repositorio es público, así que **no contiene datos de nadie**: ni rutinas,
 - La copia de seguridad se exporta desde la sección *Tus datos* y queda solo donde la persona la guarde.
 - `.gitignore` ignora `tbd-copia*.json` y `*.tbd.json` para que una copia no se suba por error.
 - Importar una copia reemplaza todo lo que hay en la app por lo de la copia (pide confirmación).
+- Un **paquete** (`"kind": "tbd-paquete"`) en cambio suma registros sin borrar nada: sirve para compartir o cargar una rutina o un conjunto de notas.
 
 ## Datos y sincronización
 
-Los datos se guardan como registros en cinco colecciones: `categories`, `blocks`, `goals`, `tasks` y `weeks`. Cada registro tiene `updatedAt` y `deviceId`, y borrar deja una lápida, así los dispositivos se sincronizan resolviendo conflictos registro por registro.
+Los datos se guardan como registros en estas colecciones: `categories`, `blocks`, `goals`, `tasks`, `weeks`, `notes`, `routines` y `workouts`. Cada registro tiene `updatedAt` y `deviceId`, y borrar deja una lápida, así los dispositivos se sincronizan resolviendo conflictos registro por registro.
 
 - **Sin servidor** (lo predeterminado): todo queda en el dispositivo y se comparte entre pestañas del navegador.
 - **Con un servidor propio**: quien administra el servidor del grupo crea una clave para cada persona; en la app se completa la dirección y la clave en *Tus datos → Sincronizar con tu servidor*. Los cambios se encolan, funcionan sin conexión y se suben al volver. Paso a paso en [docs/AUTOALOJADO.md](docs/AUTOALOJADO.md).

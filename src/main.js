@@ -11,6 +11,8 @@ import "./styles/tasks.css";
 import "./styles/goals.css";
 import "./styles/stats.css";
 import "./styles/dialogs.css";
+import "./styles/notes.css";
+import "./styles/training.css";
 
 import { nowInfo, currentWeekKey } from "./core/time.js";
 import { initData } from "./storage/index.js";
@@ -29,6 +31,10 @@ import { createTasks } from "./ui/tasks.js";
 import { createTaskEditor } from "./ui/taskEditor.js";
 import { createStats } from "./ui/stats.js";
 import { createCategoryEditor } from "./ui/categoryEditor.js";
+import { createNotes } from "./ui/notes.js";
+import { createReminder } from "./ui/reminder.js";
+import { createTraining } from "./ui/training.js";
+import { createRoutineEditor } from "./ui/routineEditor.js";
 import { setCategories } from "./state/categories.js";
 import { bindWeekControls } from "./ui/weekControls.js";
 import { initTheme } from "./ui/theme.js";
@@ -54,7 +60,11 @@ const blockEditor = createBlockEditor(ctx);
 const tasks = createTasks(ctx);
 const taskEditor = createTaskEditor(ctx);
 const categoryEditor = createCategoryEditor(ctx);
-Object.assign(ctx.open, {block:blockDialog.open, editor:blockEditor.open, taskEditor:taskEditor.open, goToTask:tasks.goTo, categories:categoryEditor.open});
+const notes = createNotes(ctx);
+const training = createTraining(ctx);
+const routineEditor = createRoutineEditor(ctx);
+Object.assign(ctx.open, {block:blockDialog.open, editor:blockEditor.open, taskEditor:taskEditor.open, goToTask:tasks.goTo, categories:categoryEditor.open,
+  goToNote:notes.goTo, trainingDay:training.showDay, routineEditor:routineEditor.open});
 Object.assign(sections, {
   hero: createHero(ctx),
   legend: createLegend(ctx),
@@ -64,7 +74,10 @@ Object.assign(sections, {
   tasks: tasks.render,
   goals: createGoals(ctx),
   stats: createStats(ctx),
-  categories: categoryEditor.render
+  categories: categoryEditor.render,
+  reminder: createReminder(ctx),
+  notes: notes.render,
+  training: training.render
 });
 
 bindWeekControls(ctx);
@@ -87,7 +100,7 @@ function tick(){
   const info = nowInfo(), key = currentWeekKey(info);
   if (key !== lastKey || info.day !== lastDay) { lastKey = key; lastDay = info.day; renderer.all(); return; }
   grid.updateNow();
-  const names = ["hero"];
+  const names = ["hero", "reminder"];
   if (view.selDay === info.day) names.push("mobile");
   if (!taskEditor.isOpen()) names.push("tasks");
   renderer.invalidate(names);

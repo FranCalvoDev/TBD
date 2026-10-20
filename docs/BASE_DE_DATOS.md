@@ -4,7 +4,7 @@ El servidor listo para usar está en [`selfhost/`](../selfhost) y se instala con
 
 ## Modelo de datos
 
-Cinco colecciones. Cada registro es un objeto JSON con estos campos comunes:
+Ocho colecciones. Cada registro es un objeto JSON con estos campos comunes:
 
 | Campo       | Tipo    | Descripción                                             |
 |-------------|---------|---------------------------------------------------------|
@@ -20,6 +20,9 @@ Cinco colecciones. Cada registro es un objeto JSON con estos campos comunes:
 | `goals`   | `g…`                | `label`, `cat`, `target`, `order` |
 | `tasks`   | `t…`                | `title`, `est` (min), `cat`, `due` ("AAAA-MM-DD"), `done`, `doneAt`, `doneWeek`, `slot` `{week, day, s, e}` |
 | `weeks`   | `2026-S42`          | `label`, `done` y `off` (`{[blockId]: {cat, min, day, title, at}}`), `goals` (`{[goalId]: número}`), `planned` |
+| `notes`   | `n…`                | `title`, `text` (líneas con «- » son listas, `**negrita**`), `cat`, `pinned`, `createdAt` |
+| `routines`| `r…`                | `name`, `description`, `checkLabel`, `active`, `days` (`id`, `name`, `short`, `info`, `warmup`, `keys`, `exercises`: `id`, `block`, `name`, `sets`, `rir`, `rest`, `metric` = `carga`/`reps`/`tiempo`/`distancia`/`texto`, `track`), `schedules` (`id`, `name`, `notes`, `plan`: 7 × `{day?, text?}`), `schedule`, `program` (`start`, `weeks`: `label`, `goal`, `detail`), `guide` (`title`, `text`) |
+| `workouts`| `w…`                | `routineId`, `dayId`, `date` ("AAAA-MM-DD"), `week` (semana del programa o ISO), `entries` (`{[exerciseId]: {kg?, reps?, value?}}`), `check`, `note` |
 
 ## Regla de conflictos
 
@@ -69,7 +72,7 @@ Crea las tablas `tbd_users` (personas y hash de sus claves) y `tbd_records`, y d
 Qué resuelve el script:
 - Aplica la misma regla de conflictos que la app (compara `deviceId` igual que JavaScript, con `collate "C"`).
 - Si un lote trae el mismo registro dos veces, se queda con el más nuevo en vez de fallar.
-- Ignora colecciones desconocidas o registros sin `id` sin rechazar el resto del lote.
+- Acepta cualquier colección con nombre válido (minúsculas, hasta 30 letras), así una colección nueva de la app no requiere migrar el servidor; ignora nombres inválidos o registros sin `id` sin rechazar el resto del lote.
 - Se puede volver a ejecutar sin perder datos.
 
 ## Otros servidores

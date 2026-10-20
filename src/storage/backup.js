@@ -3,6 +3,8 @@
 import { COLLECTIONS } from "../state/store.js";
 
 export const BACKUP_KIND = "tbd-backup";
+/** Paquete: registros para sumar (una rutina, notas…) sin reemplazar lo que ya hay. */
+export const PACKAGE_KIND = "tbd-paquete";
 const VERSION = 1;
 
 /** Arma la copia con los registros vivos (sin lápidas) y las preferencias. */
@@ -19,7 +21,7 @@ export const backupFileName = (now = new Date()) =>
 export function parseBackup(text){
   let data;
   try { data = JSON.parse(text); } catch { throw new Error("El archivo no es una copia de TBD (no es JSON válido)."); }
-  if (data?.kind !== BACKUP_KIND || typeof data.records !== "object") throw new Error("El archivo no es una copia de TBD.");
+  if (![BACKUP_KIND, PACKAGE_KIND].includes(data?.kind) || typeof data.records !== "object") throw new Error("El archivo no es una copia de TBD.");
   if (data.version > VERSION) throw new Error("La copia es de una versión más nueva de la app. Actualiza la app e intenta de nuevo.");
   const records = {};
   for (const col of COLLECTIONS) {
@@ -27,12 +29,20 @@ export function parseBackup(text){
     if (!Array.isArray(list) || list.some(r => !r || typeof r.id !== "string")) throw new Error("La copia está dañada.");
     records[col] = list;
   }
-  return {records, prefs:data.prefs || {}, exportedAt:data.exportedAt};
+  return {kind:data.kind, title:data.title || "", records, prefs:data.prefs || {}, exportedAt:data.exportedAt};
 }
 
 export const countRecords = records => ({
-  blocks: records.blocks.length, tasks: records.tasks.length, goals: records.goals.length, categories: records.categories.length
+  blocks: records.blocks.length, tasks: records.tasks.length, goals: records.goals.length, categories: records.categories.length,
+  notes: records.notes.length, routines: records.routines.length, workouts: records.workouts.length
 });
+
+/** Suma los registros de un paquete (los que tienen el mismo id se actualizan). No borra nada. */
+export function applyPackage(store, records){
+  const ops = [];
+  for (const col of COLLECTIONS) records[col].forEach(({updatedAt, deviceId, deleted, ...rec}) => ops.push({col, rec}));
+  return store.commit(ops);
+}
 
 /**
  * Restaura una copia: los datos de este dispositivo pasan a ser exactamente los de la copia.

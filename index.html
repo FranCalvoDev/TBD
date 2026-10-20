@@ -25,6 +25,8 @@
     <p class="next" id="heroNext"></p>
   </div>
 
+  <div class="reminder" id="reminder" hidden></div>
+
   <section style="margin-top:0">
     <h2>Semana tipo</h2>
     <p class="sub">Toca un bloque para ver sus tips, marcarlo como hecho o editarlo. Toca una categoría para resaltarla.</p>
@@ -50,6 +52,24 @@
     <p class="sub" id="taskSum"></p>
     <div class="tasks" id="taskList"></div>
     <details id="doneTasks" class="done-box" style="--cat:var(--accent)" hidden><summary>Completadas</summary><div class="tasks done-list" id="doneList"></div></details>
+  </section>
+
+  <section id="entrenamiento">
+    <div class="goals-head">
+      <h2>Entrenamiento</h2>
+      <div class="head-actions" id="trainActions"></div>
+    </div>
+    <p class="sub">Tu rutina por días, el plan de la semana y el registro de cada sesión para ver tu progreso.</p>
+    <div id="training"></div>
+  </section>
+
+  <section id="notas">
+    <div class="goals-head">
+      <h2>Notas</h2>
+      <button class="add-btn" id="addNote" type="button">+ Nueva nota</button>
+    </div>
+    <p class="sub">Tips y cosas para recordar. Las fijadas y las de la categoría del bloque en curso aparecen arriba, en «Recordatorio».</p>
+    <div class="notes" id="notesList"></div>
   </section>
 
   <section>
@@ -158,6 +178,45 @@
   <div class="dlg-head"><div class="dc">Personaliza tu semana</div><h3>Categorías</h3><div class="dt">Ponles nombre y color. Los cambios se guardan solos.</div></div>
   <div class="dlg-body"><div class="cat-list" id="catList"></div><button class="link-btn" id="catAdd" type="button">+ Nueva categoría</button></div>
   <div class="dlg-foot"><span class="spacer"></span><button class="btn primary" id="catDone" type="button">Listo</button></div>
+</dialog>
+
+<dialog id="noteDlg">
+  <div class="dlg-head"><div class="dc" id="nCatLabel">Nota</div><h3 id="nHead">Nueva nota</h3></div>
+  <div class="dlg-body form">
+    <label>Título<input id="nTitle" maxlength="80" autocomplete="off"></label>
+    <label>Texto<textarea id="nText" rows="7" placeholder="Para hacer una lista, empieza cada línea con «- »."></textarea></label>
+    <label>Categoría<select id="nCat"></select></label>
+    <label class="check"><input type="checkbox" id="nPin"> Fijar: aparece como recordatorio aunque no sea de la categoría del bloque en curso</label>
+    <p class="err" id="nErr" role="alert"></p>
+  </div>
+  <div class="dlg-foot">
+    <button class="btn danger" id="nDel" type="button">Eliminar</button>
+    <span class="spacer"></span>
+    <button class="btn" id="nCancel" type="button">Cancelar</button>
+    <button class="btn primary" id="nSave" type="button">Guardar</button>
+  </div>
+</dialog>
+
+<dialog id="sessDlg" class="wide">
+  <div class="dlg-head"><div class="dc" id="sRoutine"></div><h3 id="sTitle"></h3><div class="dt" id="sWeek"></div></div>
+  <div class="dlg-body" id="sBody"></div>
+  <div class="dlg-foot">
+    <button class="btn danger" id="sDel" type="button">Borrar sesión</button>
+    <span class="spacer"></span>
+    <button class="btn" id="sCancel" type="button">Cancelar</button>
+    <button class="btn primary" id="sSave" type="button">Guardar sesión</button>
+  </div>
+</dialog>
+
+<dialog id="routineDlg" class="wide">
+  <div class="dlg-head"><div class="dc">Entrenamiento</div><h3 id="rHead">Nueva rutina</h3><div class="dt">Días, ejercicios, plan semanal, semanas del programa y guía.</div></div>
+  <div class="dlg-body form" id="rBody"></div>
+  <div class="dlg-foot">
+    <button class="btn danger" id="rDel" type="button">Eliminar rutina</button>
+    <span class="spacer"></span>
+    <button class="btn" id="rCancel" type="button">Cancelar</button>
+    <button class="btn primary" id="rSave" type="button">Guardar</button>
+  </div>
 </dialog>
 
 <dialog id="conf">

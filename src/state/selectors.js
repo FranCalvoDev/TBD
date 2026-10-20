@@ -19,6 +19,9 @@ export function createSelectors(store){
         categories: store.list("categories").sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
         goals: store.list("goals").sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
         tasks: store.list("tasks"),
+        notes: store.list("notes"),
+        routines: store.list("routines").sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || String(a.name).localeCompare(String(b.name))),
+        workouts: store.list("workouts"),
         weeks: store.list("weeks").sort((a, b) => a.id < b.id ? -1 : 1)
       };
     }
@@ -36,6 +39,14 @@ export function createSelectors(store){
     goals: () => memo().goals,
     tasks: () => memo().tasks,
     task: id => store.get("tasks", id),
+    notes: () => memo().notes,
+    note: id => store.get("notes", id),
+    routines: () => memo().routines,
+    routine: id => store.get("routines", id),
+    /** La rutina en uso: la marcada como activa o, si no, la primera. */
+    activeRoutine: () => memo().routines.find(r => r.active) || memo().routines[0] || null,
+    workouts: () => memo().workouts,
+    workout: id => store.get("workouts", id),
     weeks: () => memo().weeks,
     week: key => store.get("weeks", key) || EMPTY_WEEK,
     curWeek: () => sel.week(sel.curKey()),

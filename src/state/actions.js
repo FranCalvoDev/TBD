@@ -49,6 +49,37 @@ export function createActions(store, sel){
     },
     deleteGoal(id){ store.remove("goals", id); },
 
+    saveNote(data, id){
+      const rec = id ? {...sel.note(id), ...data} : {id:"n"+uid(), createdAt:iso(), pinned:false, ...data};
+      store.put("notes", rec);
+      return rec.id;
+    },
+    togglePin(id){ const n = sel.note(id); if (n) store.put("notes", {...n, pinned:!n.pinned}); },
+    deleteNote(id){ store.remove("notes", id); },
+
+    /** Guarda una rutina completa (días, ejercicios y guía viajan juntos en un registro). */
+    saveRoutine(data, id){
+      const rec = id ? {...sel.routine(id), ...data} : {id:"r"+uid(), createdAt:iso(), ...data};
+      store.put("routines", rec);
+      return rec.id;
+    },
+    updateRoutine(id, patch){ const r = sel.routine(id); if (r) store.put("routines", {...r, ...patch}); },
+    /** Marca una rutina como la que está en uso (y desmarca las demás). */
+    activateRoutine(id){
+      store.commit(sel.routines().filter(r => r.active !== (r.id === id)).map(r => ({col:"routines", rec:{...r, active:r.id === id}})));
+    },
+    deleteRoutine(id){
+      store.commit([{col:"routines", id, remove:true}, ...sel.workouts().filter(w => w.routineId === id).map(w => ({col:"workouts", id:w.id, remove:true}))]);
+    },
+
+    /** Crea o actualiza la sesión de un día (una por rutina, día de rutina y fecha). */
+    saveWorkout(data, id){
+      const rec = id ? {...sel.workout(id), ...data} : {id:"w"+uid(), createdAt:iso(), ...data};
+      store.put("workouts", rec);
+      return rec.id;
+    },
+    deleteWorkout(id){ store.remove("workouts", id); },
+
     addCategory(){
       const cats = sel.categories(), used = new Set(cats.map(c => c.color));
       const color = ["c1","c2","c3","c4","c5","c6","c7","c8"].find(c => !used.has(c)) || "c8";

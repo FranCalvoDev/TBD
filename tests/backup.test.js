@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildBackup, parseBackup, restoreBackup, backupFileName, countRecords } from "../src/storage/backup.js";
+import { buildBackup, parseBackup, restoreBackup, applyPackage, backupFileName, countRecords } from "../src/storage/backup.js";
 import { makeApp } from "./helpers.js";
 
 describe("copias de seguridad", () => {
@@ -23,7 +23,7 @@ describe("copias de seguridad", () => {
     const destino = makeApp("dev-b", "empty");
     destino.act.saveTask({title:"Algo local", est:15, cat:"personal", due:""});
     const {records, prefs} = parseBackup(texto);
-    expect(countRecords(records)).toEqual({blocks:14, tasks:0, goals:1, categories:8});
+    expect(countRecords(records)).toEqual({blocks:14, tasks:0, goals:1, categories:8, notes:0, routines:0, workouts:0});
     restoreBackup(destino.store, records);
     expect(destino.sel.tasks()).toHaveLength(0);                      // lo local que no estaba en la copia se borra
     expect(destino.sel.category("rutina").name).toBe("Hábitos");
@@ -37,5 +37,25 @@ describe("copias de seguridad", () => {
     expect(() => parseBackup(JSON.stringify({kind:"otra-cosa"}))).toThrow("no es una copia de TBD");
     expect(() => parseBackup(JSON.stringify({kind:"tbd-backup", version:99, records:{}}))).toThrow("versión más nueva");
     expect(() => parseBackup(JSON.stringify({kind:"tbd-backup", version:1, records:{blocks:[{sin:"id"}]}}))).toThrow("dañada");
+  });
+
+  it("una copia de una versión anterior (sin notas ni rutinas) se sigue pudiendo importar", () => {
+    const vieja = {app:"TBD", kind:"tbd-backup", version:1, records:{categories:[], blocks:[], goals:[], tasks:[], weeks:[]}};
+    expect(countRecords(parseBackup(JSON.stringify(vieja)).records)).toMatchObject({notes:0, routines:0, workouts:0});
+  });
+
+  it("un paquete suma registros sin borrar nada", () => {
+    const {store, sel, act} = makeApp();
+    const mia = act.saveNote({title:"Mía", text:"", cat:"", pinned:false});
+    const paquete = JSON.stringify({app:"TBD", kind:"tbd-paquete", version:1, title:"Mi rutina",
+      records:{notes:[{id:"n1", title:"Del paquete", text:"x", cat:"ejercicio", pinned:true}], routines:[{id:"r1", name:"Fase 3", days:[]}]}});
+    const p = parseBackup(paquete);
+    expect(p.kind).toBe("tbd-paquete");
+    expect(p.title).toBe("Mi rutina");
+    applyPackage(store, p.records);
+    expect(sel.notes().map(n => n.title).sort()).toEqual(["Del paquete", "Mía"]);
+    expect(sel.note(mia)).toBeDefined();
+    expect(sel.routine("r1").name).toBe("Fase 3");
+    expect([0,1,2,3,4,5,6].flatMap(d => sel.blocksOf(d))).toHaveLength(14); // lo demás sigue igual
   });
 });

@@ -142,6 +142,8 @@ Todos los comandos se ejecutan dentro de `selfhost/`:
 
 Un bloqueo o una clave nueva se aplican en menos de 30 segundos.
 
+**Cuando la app se actualiza, actualiza también el servidor.** Las versiones nuevas pueden sumar tipos de datos (por ejemplo notas, rutinas y sesiones de entrenamiento); un servidor viejo los ignora y no se sincronizarían. Al arrancar, el servidor actualiza la base de datos solo, sin perder nada.
+
 ### Copias de seguridad del servidor
 
 ```bash

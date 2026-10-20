@@ -22,7 +22,7 @@ create sequence if not exists tbd_records_seq;
 
 create table if not exists tbd_records (
   user_id    uuid    not null,
-  col        text    not null check (col in ('categories', 'blocks', 'goals', 'tasks', 'weeks')),
+  col        text    not null,
   id         text    not null,
   data       jsonb   not null,              -- el registro completo, tal como lo manda la app
   updated_at bigint  not null,              -- updatedAt del registro (milisegundos)
@@ -33,6 +33,11 @@ create table if not exists tbd_records (
 );
 
 create index if not exists tbd_records_user_seq on tbd_records (user_id, seq);
+
+-- Nombres de colección válidos: minúsculas, hasta 30 letras. Las versiones anteriores tenían una
+-- lista fija; se reemplaza para que una colección nueva de la app no requiera migrar el servidor.
+alter table tbd_records drop constraint if exists tbd_records_col_check;
+alter table tbd_records add constraint tbd_records_col_check check (col ~ '^[a-z]{1,30}$');
 
 -- POST /changes ---------------------------------------------------------------
 -- Guarda los cambios de un usuario. Acepta el cuerpo que manda la app ({"changes": [...]})
@@ -57,7 +62,7 @@ begin
     from jsonb_array_elements(
            case when jsonb_typeof(p_changes) = 'object' then p_changes->'changes' else p_changes end
          ) as c
-    where c->>'col' in ('categories', 'blocks', 'goals', 'tasks', 'weeks')
+    where c->>'col' ~ '^[a-z]{1,30}$'
       and c->'rec'->>'id' is not null
       and c->'rec'->>'updatedAt' is not null
     order by c->>'col', c->'rec'->>'id',

@@ -9,7 +9,10 @@ const DEPS = {
   tasks:       ["categories", "blocks", "tasks", "weeks"],
   goals:       ["categories", "goals", "weeks"],
   stats:       ["categories", "blocks", "goals", "tasks", "weeks"],
-  categories:  ["categories"]
+  categories:  ["categories"],
+  reminder:    ["categories", "blocks", "weeks", "notes", "routines"],
+  notes:       ["categories", "notes"],
+  training:    ["routines", "workouts"]
 };
 
 export function createRenderer(sections){
