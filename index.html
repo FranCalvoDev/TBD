@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -17,6 +17,13 @@
     </div>
   </div>
 
+  <nav class="quicknav" id="quicknav" aria-label="Accesos directos">
+    <a href="#hero">Ahora</a>
+    <a href="#semana">Semana</a>
+    <a href="#tareas">Tareas, metas y notas</a>
+    <a href="#estadisticas">Estadísticas y datos</a>
+  </nav>
+
   <div class="hero" id="hero" aria-live="polite">
     <p class="when" id="heroWhen"></p>
     <p class="now" id="heroNow"></p>
@@ -25,7 +32,7 @@
     <p class="next" id="heroNext"></p>
   </div>
 
-  <section style="margin-top:0">
+  <section id="semana" style="margin-top:0">
     <h2>Semana tipo</h2>
     <p class="sub">Toca un bloque para ver sus tips, marcarlo como hecho o editarlo. Toca una categoría para resaltarla.</p>
     <div class="legend" id="legend"></div>
@@ -52,7 +59,7 @@
     <details id="doneTasks" class="done-box" style="--cat:var(--accent)" hidden><summary>Completadas</summary><div class="tasks done-list" id="doneList"></div></details>
   </section>
 
-  <section>
+  <section id="metas">
     <div class="goals-head">
       <h2>Metas de la semana</h2>
       <button class="link-btn" id="editGoals" type="button">Editar metas</button>
@@ -61,13 +68,33 @@
     <div class="goals" id="goals"></div>
   </section>
 
-  <section>
+  <section id="notas">
+    <h2>Notas y sugerencias</h2>
+    <p class="sub">Anota tips, ideas y sugerencias para ti. Se guardan solo en este dispositivo.</p>
+    <form class="data-card notes-form" id="noteForm">
+      <div class="kind-group" id="noteKind" role="radiogroup" aria-label="Tipo de nota">
+        <button type="button" class="kind-btn" role="radio" aria-checked="false" data-kind="tip">Tip</button>
+        <button type="button" class="kind-btn" role="radio" aria-checked="false" data-kind="sugerencia">Sugerencia</button>
+        <button type="button" class="kind-btn" role="radio" aria-checked="true" data-kind="nota">Nota</button>
+      </div>
+      <textarea class="edit-in" id="noteText" rows="3" maxlength="1000" placeholder="Escribe un tip, una idea o una sugerencia…" aria-label="Texto de la nota"></textarea>
+      <button class="btn primary" type="submit">Guardar nota</button>
+    </form>
+    <div class="notes" id="noteList"></div>
+  </section>
+
+  <section id="estadisticas">
     <h2>Estadísticas</h2>
     <p class="sub" id="statsSub">Se calculan con todo lo que marcas y sumas, semana a semana.</p>
     <div id="stats"></div>
   </section>
 
   <section id="datos">
+    <div class="data-card switch-card">
+      <span id="dataSwitchLabel">Mostrar «Tus datos»</span>
+      <button class="switch" id="dataSwitch" type="button" role="switch" aria-checked="false" aria-controls="dataBody" aria-labelledby="dataSwitchLabel"><span class="switch-text">OFF</span></button>
+    </div>
+    <div id="dataBody" hidden>
     <h2>Tus datos</h2>
     <p class="sub" id="dataSub">Todo se guarda solo en este dispositivo: nadie más tiene acceso. Exporta una copia para guardarla donde quieras (Drive, correo, tu computadora) o para pasar tus datos a otro teléfono.</p>
     <div class="data-card">
@@ -94,6 +121,7 @@
         </div>
       </div>
       <p class="data-msg" id="syncMsg" role="status" aria-live="polite"></p>
+    </div>
     </div>
   </section>
 

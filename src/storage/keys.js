@@ -5,7 +5,8 @@ export const KEYS = {
   outbox: "tbd:outbox",
   cursor: "tbd:cursor",
   server: "tbd:servidor",
-  theme: "tbd:tema"
+  theme: "tbd:tema",
+  notes: "tbd:notas"
 };
 
 // Claves de versiones anteriores: se leen una sola vez para migrar.

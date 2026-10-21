@@ -21,8 +21,16 @@ async function saveFile(name, text){
 }
 
 export function initBackup(ctx, theme){
-  const msg = $("dataMsg"), file = $("importFile");
+  const msg = $("dataMsg"), file = $("importFile"), sw = $("dataSwitch");
   const say = (text, kind = "") => { msg.textContent = text; msg.className = "data-msg " + kind; };
+
+  // «Tus datos» queda oculto (OFF) hasta activarlo.
+  sw.addEventListener("click", () => {
+    const on = sw.getAttribute("aria-checked") !== "true";
+    sw.setAttribute("aria-checked", String(on));
+    sw.querySelector(".switch-text").textContent = on ? "ON" : "OFF";
+    $("dataBody").hidden = !on;
+  });
 
   $("exportBtn").addEventListener("click", async () => {
     try {
