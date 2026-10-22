@@ -7,7 +7,7 @@
 // Con Docker:  docker compose exec servidor node manage.js add Ana
 import crypto from "node:crypto";
 import {
-  closeDatabase, connectDatabase, createUser, deleteUser, findUserByName,
+  closeDatabase, connectDatabase, createUser, deleteUser,
   hashToken, listUsers, revokeUser, updateUserToken
 } from "./db.js";
 
