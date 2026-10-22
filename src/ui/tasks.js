@@ -4,6 +4,7 @@ import { minToStr, durTxt, nowInfo } from "../core/time.js";
 import { esc } from "../core/utils.js";
 import { suggestSlots, slotLabel, slotPassed, dueStatus, sortPending, freeMinutesLeft } from "../domain/tasks.js";
 import { $, hit } from "./dom.js";
+import { reveal } from "./collapsible.js";
 
 export function createTasks(ctx){
   const list = $("taskList"), doneBox = $("doneTasks"), doneList = $("doneList"), {sel, act, view} = ctx;
@@ -45,7 +46,7 @@ export function createTasks(ctx){
     return `<div class="task${t.done ? " done" : ""}" id="task-${esc(t.id)}" data-task-id="${esc(t.id)}" style="--cat:${catVar(t.cat)}">
       <button type="button" class="tcheck" data-check aria-label="${t.done ? "Marcar como pendiente" : "Completar"}: ${esc(t.title)}">${t.done ? "✓" : ""}</button>
       <div class="tmain"><div class="ttl">${esc(t.title)}</div>
-        <div class="tchips"><span class="tchip">${durTxt(t.est)}</span><span class="tchip cat">${catName(t.cat)}</span>${due ? `<span class="tchip${due.warn ? " warn" : ""}">${due.text}</span>` : ""}${sched}</div>
+        <div class="tchips"><span class="tchip">${durTxt(t.est)}</span><span class="tchip cat">${esc(catName(t.cat))}</span>${due ? `<span class="tchip${due.warn ? " warn" : ""}">${due.text}</span>` : ""}${sched}</div>
         <div class="tsugg">${sugg}</div></div>
       <div class="tact">${when}<button type="button" class="link-btn" data-edit>Editar</button></div></div>`;
   }
@@ -69,6 +70,7 @@ export function createTasks(ctx){
 
   function goTo(id){
     const el = document.getElementById("task-" + id); if (!el) return;
+    reveal(el);
     el.scrollIntoView({behavior:"smooth", block:"center"});
     el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
   }

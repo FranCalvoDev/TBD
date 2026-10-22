@@ -11,6 +11,7 @@ import "./styles/tasks.css";
 import "./styles/goals.css";
 import "./styles/stats.css";
 import "./styles/dialogs.css";
+import "./styles/routines.css";
 
 import { nowInfo, currentWeekKey } from "./core/time.js";
 import { initData } from "./storage/index.js";
@@ -28,6 +29,9 @@ import { createGoals } from "./ui/goals.js";
 import { createTasks } from "./ui/tasks.js";
 import { createTaskEditor } from "./ui/taskEditor.js";
 import { createStats } from "./ui/stats.js";
+import { createRoutines } from "./ui/routines.js";
+import { createRoutineEditor } from "./ui/routineEditor.js";
+import { initCollapsible } from "./ui/collapsible.js";
 import { createCategoryEditor } from "./ui/categoryEditor.js";
 import { setCategories } from "./state/categories.js";
 import { bindWeekControls } from "./ui/weekControls.js";
@@ -44,7 +48,7 @@ const sel = createSelectors(store);
 const act = createActions(store, sel);
 
 // Estado de la pantalla (no se guarda): filtros, día elegido en el celular, etc.
-const view = {hidden:new Set(), selDay:nowInfo().day, editingGoals:false, openSugg:new Set()};
+const view = {hidden:new Set(), selDay:nowInfo().day, editingGoals:false, openSugg:new Set(), openRoutines:new Set()};
 
 const sections = {};
 const renderer = createRenderer(sections);
@@ -56,7 +60,9 @@ const blockEditor = createBlockEditor(ctx);
 const tasks = createTasks(ctx);
 const taskEditor = createTaskEditor(ctx);
 const categoryEditor = createCategoryEditor(ctx);
-Object.assign(ctx.open, {block:blockDialog.open, editor:blockEditor.open, taskEditor:taskEditor.open, goToTask:tasks.goTo, categories:categoryEditor.open});
+const routines = createRoutines(ctx);
+const routineEditor = createRoutineEditor(ctx);
+Object.assign(ctx.open, {block:blockDialog.open, editor:blockEditor.open, taskEditor:taskEditor.open, goToTask:tasks.goTo, categories:categoryEditor.open, routine:routines.goTo, routineEditor:routineEditor.open});
 Object.assign(sections, {
   hero: createHero(ctx),
   legend: createLegend(ctx),
@@ -64,6 +70,7 @@ Object.assign(sections, {
   mobile: createMobileDay(ctx),
   blockDialog: blockDialog.render,
   tasks: tasks.render,
+  routines: routines.render,
   goals: createGoals(ctx),
   stats: createStats(ctx),
   categories: categoryEditor.render
@@ -75,6 +82,7 @@ initBackup(ctx, theme);
 initSyncSettings(ctx);
 initNotes();
 initQuickNav();
+initCollapsible();
 initNative();
 // El registro de categorías se actualiza antes de redibujar.
 setCategories(sel.categories());

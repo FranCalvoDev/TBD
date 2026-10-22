@@ -5,11 +5,15 @@ import { START, toMin, minToStr, fmt, durTxt, nowInfo } from "../core/time.js";
 import { esc } from "../core/utils.js";
 import { $, setText } from "./dom.js";
 
-export function createHero({sel}){
-  const hero = $("hero"), bar = hero.querySelector("#heroBar span"), next = $("heroNext");
+export function createHero(ctx){
+  const {sel} = ctx;
+  const hero = $("hero"), bar = hero.querySelector("#heroBar span"), next = $("heroNext"), shortcuts = $("heroRoutines");
+  shortcuts.addEventListener("click", e => {
+    const b = e.target.closest("[data-routine]"); if (b) ctx.open.routine(b.dataset.routine);
+  });
   return function render(){
     const {day, min} = nowInfo(), off = sel.curWeek().off || {};
-    const tItems = sel.tasksAt(sel.curKey(), day).map(t => ({title:"Tarea: "+t.title, s:t.slot.s, e:t.slot.e, cat:t.cat}));
+    const tItems = sel.tasksAt(sel.curKey(), day).map(t => ({taskId:t.id, title:"Tarea: "+t.title, s:t.slot.s, e:t.slot.e, cat:t.cat}));
     const items = [...sel.blocksOf(day).filter(x => !off[x.id]), ...tItems].sort((a, b) => toMin(a.s) - toMin(b.s));
     const inNow = x => min >= toMin(x.s) && min < toMin(x.e);
     const cur = tItems.find(inNow) || items.find(inNow);
@@ -35,5 +39,9 @@ export function createHero({sel}){
     next.hidden = $("heroBar").hidden = empty && !cur;
     if (nx) { hero.style.setProperty("--next-c", catVar(nx.cat)); next.innerHTML = `Después: <b>${esc(nx.title)}</b> a las ${fmt(nx.s)}`; }
     else next.textContent = "No hay más bloques hoy.";
+    // Acceso directo a las rutinas de la tarea que toca ahora.
+    const routines = cur?.taskId ? sel.routinesOfTask(cur.taskId) : [];
+    shortcuts.hidden = !routines.length;
+    shortcuts.innerHTML = routines.map(r => `<button type="button" class="hero-rt" data-routine="${esc(r.id)}">Abrir rutina: ${esc(r.title)}</button>`).join("");
   };
 }

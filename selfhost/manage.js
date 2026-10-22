@@ -4,7 +4,6 @@
 //   node manage.js new-key <nombre>  genera una clave nueva (la anterior deja de funcionar)
 //   node manage.js revoke <nombre>   bloquea el acceso (sus datos quedan guardados)
 //   node manage.js delete <nombre>   borra la persona y todos sus datos
-// Con Docker:  docker compose exec servidor node manage.js add Ana
 import crypto from "node:crypto";
 import {
   closeDatabase, connectDatabase, createUser, deleteUser,

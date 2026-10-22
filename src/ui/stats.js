@@ -23,7 +23,7 @@ export function createStats(ctx){
     html += chart("Cumplimiento por semana", "Porcentaje de bloques marcados como hechos en las últimas semanas.",
       `<div class="sv">${barChart({labels:st.labels, series:[{name:"Cumplimiento", values:st.weekly, color:"var(--accent)"}], max:100, suffix:"%"})}</div>`);
     html += chart("Horas cumplidas esta semana", "Lo que hiciste frente a lo planificado, por área.", st.hours.map(h =>
-      `<div class="hbar" style="--cat:${catVar(h.cat)}"><span class="nm">${catName(h.cat)}</span><div class="tr"><span style="width:${h.planned ? Math.min(h.done/h.planned, 1)*100 : 100}%"></span></div><span class="nb">${hrs(h.done)} de ${hrs(h.planned)} h</span></div>`).join(""));
+      `<div class="hbar" style="--cat:${catVar(h.cat)}"><span class="nm">${esc(catName(h.cat))}</span><div class="tr"><span style="width:${h.planned ? Math.min(h.done/h.planned, 1)*100 : 100}%"></span></div><span class="nb">${hrs(h.done)} de ${hrs(h.planned)} h</span></div>`).join(""));
     html += chart("Qué días cumples más", "Promedio de cumplimiento por día de la semana. Los días que todavía no llegaron no cuentan.",
       `<div class="sv">${barChart({labels:SHORT, series:[{name:"Cumplimiento", values:st.dayPct, color:"var(--c1)"}], max:100, suffix:"%"})}</div>`);
     const palette = ["var(--c1)", "var(--c5)", "var(--c4)"];

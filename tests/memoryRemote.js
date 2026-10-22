@@ -1,6 +1,5 @@
-// Servidor en memoria con la misma semántica que debe tener la base de datos real.
-// Lo usan los tests y sirve de referencia para implementar el backend.
-import { isNewer } from "../state/store.js";
+// Servidor en memoria para los tests de sincronización.
+import { isNewer } from "../src/state/store.js";
 
 export function createMemoryRemote(){
   const rows = new Map(); // "col:id" -> {col, rec, seq}

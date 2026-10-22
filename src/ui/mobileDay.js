@@ -28,7 +28,7 @@ export function createMobileDay(ctx){
     list.innerHTML = items.map(x => {
       const isNow = d === day && min >= toMin(x.s) && min < toMin(x.e);
       const cls = "item" + (x.kind === "task" ? " task" : "") + (x.off ? " off" : "") + (view.hidden.has(x.cat) ? " dim" : "") + (x.done ? " done" : "") + (isNow ? " now" : "");
-      return `<button type="button" class="${cls}" data-kind="${x.kind}" data-id="${esc(x.id)}" style="--cat:${catVar(x.cat)}"><div class="tm">${fmt(x.s)}<br>${fmt(x.e)}</div><div><div class="cn">${x.kind === "task" ? "Tarea" : catName(x.cat)}${x.off ? ", horario libre" : ""}${isNow ? ", ahora" : ""}</div><div class="tt">${x.done ? "✓ " : ""}${esc(x.title)}</div></div></button>`;
+      return `<button type="button" class="${cls}" data-kind="${x.kind}" data-id="${esc(x.id)}" style="--cat:${catVar(x.cat)}"><div class="tm">${fmt(x.s)}<br>${fmt(x.e)}</div><div><div class="cn">${x.kind === "task" ? "Tarea" : esc(catName(x.cat))}${x.off ? ", horario libre" : ""}${isNow ? ", ahora" : ""}</div><div class="tt">${x.done ? "✓ " : ""}${esc(x.title)}</div></div></button>`;
     }).join("");
   }
   return render;

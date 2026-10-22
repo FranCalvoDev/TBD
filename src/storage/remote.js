@@ -1,17 +1,11 @@
-// Contrato con la base de datos remota. Cualquier backend que lo cumpla sirve
-// (el servidor de selfhost/ u otro propio). Ver docs/BASE_DE_DATOS.md.
+// Contrato con el servidor de sincronización.
 //
 // interface Remote {
-//   pull(cursor: string|number|null): Promise<{changes: Change[], cursor: string|number}>
-//     Devuelve los registros que cambiaron en el servidor después de `cursor`
-//     (todos si es null) y el nuevo cursor.
-//   push(changes: Change[]): Promise<void>
-//     Envía registros. El servidor guarda cada uno solo si es más nuevo que el que tiene
-//     (mismo criterio que isNewer en src/state/store.js).
-//   subscribe?(onChange: () => void): () => void
-//     Opcional: avisa en tiempo real que hay cambios para traer.
+//   pull(cursor): Promise<{changes: Change[], cursor}>   registros nuevos desde `cursor` (todos si es null)
+//   push(changes: Change[]): Promise<void>               el servidor guarda cada uno solo si es más nuevo (isNewer)
+//   subscribe?(onChange): () => void                     opcional: aviso en tiempo real
 // }
-// type Change = { col: "blocks"|"goals"|"tasks"|"weeks", rec: { id, updatedAt, deviceId, deleted?, ... } }
+// type Change = { col: "categories"|"blocks"|"goals"|"tasks"|"weeks"|"routines", rec: { id, updatedAt, deviceId, deleted?, ... } }
 
 /**
  * Prueba la dirección y la clave contra GET /me. Devuelve {name} o lanza un Error con

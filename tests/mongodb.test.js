@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isNewer, normalizeChanges } from "../selfhost/db.js";
+import { isNewer, normalizeChanges } from "../selfhost/changes.js";
 
 describe("documentos MongoDB de sincronización", () => {
   it("mantiene la regla de conflicto por updatedAt y deviceId", () => {

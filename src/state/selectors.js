@@ -19,6 +19,7 @@ export function createSelectors(store){
         categories: store.list("categories").sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
         goals: store.list("goals").sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
         tasks: store.list("tasks"),
+        routines: store.list("routines").sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
         weeks: store.list("weeks").sort((a, b) => a.id < b.id ? -1 : 1)
       };
     }
@@ -36,6 +37,9 @@ export function createSelectors(store){
     goals: () => memo().goals,
     tasks: () => memo().tasks,
     task: id => store.get("tasks", id),
+    routines: () => memo().routines,
+    routine: id => store.get("routines", id),
+    routinesOfTask: taskId => memo().routines.filter(r => r.taskId === taskId),
     weeks: () => memo().weeks,
     week: key => store.get("weeks", key) || EMPTY_WEEK,
     curWeek: () => sel.week(sel.curKey()),

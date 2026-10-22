@@ -2,7 +2,7 @@
   "name": "tbd-servidor",
   "private": true,
   "version": "1.0.0",
-  "description": "Servidor de sincronización autoalojado para TBD · MiSemana",
+  "description": "Servidor de sincronización para TBD",
   "type": "module",
   "scripts": {
     "start": "node server.js"

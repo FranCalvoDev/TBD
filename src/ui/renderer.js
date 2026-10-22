@@ -1,7 +1,8 @@
 // Agrupa los redibujados en un solo cuadro de animación y redibuja solo
 // las secciones que dependen de las colecciones que cambiaron.
 const DEPS = {
-  hero:        ["categories", "blocks", "tasks", "weeks"],
+  hero:        ["categories", "blocks", "tasks", "weeks", "routines"],
+  routines:    ["categories", "tasks", "routines"],
   legend:      ["categories", "blocks"],
   week:        ["categories", "blocks", "tasks", "weeks"],
   mobile:      ["categories", "blocks", "tasks", "weeks"],

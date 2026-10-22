@@ -5,7 +5,7 @@
 // Si dos dispositivos editan el mismo registro, gana la versión más nueva
 // (last-write-wins, con deviceId como desempate).
 
-export const COLLECTIONS = ["categories", "blocks", "goals", "tasks", "weeks"];
+export const COLLECTIONS = ["categories", "blocks", "goals", "tasks", "weeks", "routines"];
 
 /** ¿`a` le gana a `b`? */
 export const isNewer = (a, b) => !b || a.updatedAt > b.updatedAt ||

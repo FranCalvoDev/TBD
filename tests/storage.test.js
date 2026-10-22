@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { createLocalAdapter } from "../src/storage/localAdapter.js";
 import { createSyncEngine } from "../src/storage/syncEngine.js";
-import { createMemoryRemote } from "../src/storage/memoryRemote.js";
+import { createMemoryRemote } from "./memoryRemote.js";
 import { createHttpRemote } from "../src/storage/remote.js";
 import { KEYS, LEGACY } from "../src/storage/keys.js";
 import { memoryStorage, makeApp } from "./helpers.js";

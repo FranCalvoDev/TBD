@@ -66,6 +66,20 @@ export function createActions(store, sel){
         sel.tasks().filter(t => t.cat === id).length + sel.goals().filter(g => g.cat === id).length;
     },
 
+    /** data: {title, taskId ("" = sin tarea), rows:[{name, detail, amount}]} */
+    saveRoutine(data, id){
+      if (id) {
+        const r = sel.routine(id); if (!r) return null;
+        store.put("routines", {...r, ...data});
+        return id;
+      }
+      const order = Math.max(-1, ...sel.routines().map(r => r.order ?? 0)) + 1;
+      const rec = {id:"r"+uid(), order, ...data};
+      store.put("routines", rec);
+      return rec.id;
+    },
+    deleteRoutine(id){ store.remove("routines", id); },
+
     saveTask(data, id){
       if (id) {
         const t = clone(sel.task(id)); if (!t) return null;

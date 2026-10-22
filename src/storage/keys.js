@@ -6,7 +6,8 @@ export const KEYS = {
   cursor: "tbd:cursor",
   server: "tbd:servidor",
   theme: "tbd:tema",
-  notes: "tbd:notas"
+  notes: "tbd:notas",
+  folded: "tbd:plegadas"
 };
 
 // Claves de versiones anteriores: se leen una sola vez para migrar.

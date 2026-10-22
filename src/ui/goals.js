@@ -36,7 +36,7 @@ export function createGoals(ctx){
       <div class="edit-row"><select class="edit-in" data-f="cat" data-k="${esc(g.id)}:cat" aria-label="Categoría">${categoryOptions(sel, g.cat)}</select>
       <input class="edit-in" data-f="target" data-k="${esc(g.id)}:target" type="number" min="1" max="999" value="${g.target}" aria-label="Objetivo semanal"></div>
       <div class="edit-row"><button type="button" class="btn danger" data-del data-k="${esc(g.id)}:del">Eliminar meta</button></div></div>`;
-    return `<div class="goal" data-goal="${esc(g.id)}" style="--cat:${catVar(g.cat)}"><div class="gc">${catName(g.cat)}</div><p class="gl">${esc(g.label)}</p>
+    return `<div class="goal" data-goal="${esc(g.id)}" style="--cat:${catVar(g.cat)}"><div class="gc">${esc(catName(g.cat))}</div><p class="gl">${esc(g.label)}</p>
       <div class="row"><span class="num">${v}<small> / ${g.target}</small></span>
       <button type="button" data-bump="-1" data-k="${esc(g.id)}:-" aria-label="Restar uno a ${esc(g.label)}">−</button><button type="button" data-bump="1" data-k="${esc(g.id)}:+" aria-label="Sumar uno a ${esc(g.label)}">+</button></div>
       <div class="gb"><span style="width:${Math.min(v/g.target, 1)*100}%"></span></div></div>`;

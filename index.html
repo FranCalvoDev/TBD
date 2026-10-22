@@ -21,6 +21,7 @@
     <a href="#hero">Ahora</a>
     <a href="#semana">Semana</a>
     <a href="#tareas">Tareas, metas y notas</a>
+    <a href="#rutinas">Rutinas</a>
     <a href="#estadisticas">Estadísticas y datos</a>
   </nav>
 
@@ -30,6 +31,7 @@
     <p class="meta" id="heroMeta"></p>
     <div class="bar" id="heroBar"><span></span></div>
     <p class="next" id="heroNext"></p>
+    <div class="hero-routines" id="heroRoutines" hidden></div>
   </div>
 
   <section id="semana" style="margin-top:0">
@@ -57,6 +59,15 @@
     <p class="sub" id="taskSum"></p>
     <div class="tasks" id="taskList"></div>
     <details id="doneTasks" class="done-box" style="--cat:var(--accent)" hidden><summary>Completadas</summary><div class="tasks done-list" id="doneList"></div></details>
+  </section>
+
+  <section id="rutinas">
+    <div class="goals-head">
+      <h2>Rutinas</h2>
+      <button class="add-btn" id="addRoutine" type="button">+ Nueva rutina</button>
+    </div>
+    <p class="sub">Pasos o ejercicios para repetir. Puedes ligar una rutina a una tarea: cuando llegue su día y hora, aparece un acceso directo arriba.</p>
+    <div class="routines" id="routineList"></div>
   </section>
 
   <section id="metas">
@@ -109,7 +120,7 @@
       <h3>Sincronizar con tu servidor</h3>
       <p class="data-help">Si tu grupo tiene un servidor TBD propio, conecta este dispositivo con la dirección y la clave que te dieron. Tus datos viajan solo a ese servidor.</p>
       <div class="form sync-form" id="syncForm">
-        <label>Dirección del servidor<input id="srvUrl" inputmode="url" placeholder="http://192.168.1.10:8787" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+        <label>Dirección del servidor<input id="srvUrl" inputmode="url" placeholder="https://tu-servidor" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
         <label>Clave de acceso<input id="srvKey" type="password" placeholder="tbd_…" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
         <button class="btn primary" id="srvConnect" type="button">Conectar</button>
       </div>
@@ -179,6 +190,24 @@
     <span class="spacer"></span>
     <button class="btn" id="tCancel" type="button">Cancelar</button>
     <button class="btn primary" id="tSave" type="button">Guardar</button>
+  </div>
+</dialog>
+
+<dialog id="routineDlg">
+  <div class="dlg-head"><div class="dc">Rutina</div><h3 id="rdTitle">Nueva rutina</h3></div>
+  <div class="dlg-body form">
+    <label>Nombre<input id="rTitle" maxlength="60" autocomplete="off"></label>
+    <label>Tarea asociada<select id="rTask"></select></label>
+    <div class="rrows-head" aria-hidden="true"><span>Paso o ejercicio</span><span>Detalle</span><span>Tiempo o series</span><span></span></div>
+    <div class="rrows" id="rRows"></div>
+    <button class="link-btn" id="rAddRow" type="button">+ Agregar fila</button>
+    <p class="err" id="rErr" role="alert"></p>
+  </div>
+  <div class="dlg-foot">
+    <button class="btn danger" id="rDel" type="button">Eliminar</button>
+    <span class="spacer"></span>
+    <button class="btn" id="rCancel" type="button">Cancelar</button>
+    <button class="btn primary" id="rSave" type="button">Guardar</button>
   </div>
 </dialog>
 

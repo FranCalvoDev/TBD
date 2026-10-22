@@ -1,10 +1,9 @@
-// Servidor de sincronización de TBD · MiSemana.
-// Implementa el contrato de docs/BASE_DE_DATOS.md:
-//   GET  /changes?since=<cursor>  → {"changes": [...], "cursor": n}
-//   POST /changes  {"changes": [...]} → 204
-//   GET  /me      → {"name": "..."}   (para probar la conexión desde la app)
-//   GET  /health  → {"ok": true}      (sin clave, para monitoreo)
-// Cada petición lleva «Authorization: Bearer <clave de acceso>»; las claves se crean con manage.js.
+// Servidor de sincronización.
+//   GET  /changes?since=<cursor>  -> {"changes": [...], "cursor": n}
+//   POST /changes  {"changes": [...]} -> 204
+//   GET  /me      -> {"name": "..."}
+//   GET  /health  -> {"ok": true}
+// Todo salvo /health exige el encabezado Authorization con la clave de acceso.
 import http from "node:http";
 import {
   closeDatabase, connectDatabase, findActiveUserByTokenHash, hashToken,
@@ -21,7 +20,7 @@ const CORS = {
   "Access-Control-Max-Age": "86400"
 };
 const send = (res, status, body) => {
-  res.writeHead(status, {...CORS, ...(body === undefined ? {} : {"Content-Type":"application/json"})});
+  res.writeHead(status, {...CORS, "X-Content-Type-Options":"nosniff", "Cache-Control":"no-store", ...(body === undefined ? {} : {"Content-Type":"application/json"})});
   res.end(body === undefined ? undefined : JSON.stringify(body));
 };
 

@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import { MongoClient } from "mongodb";
+import { isNewer, normalizeChanges } from "./changes.js";
 
-const COLLECTIONS = new Set(["categories", "blocks", "goals", "tasks", "weeks"]);
 const DATABASE_NAME = process.env.MONGODB_DB || "tbd";
 const uri = process.env.MONGODB_URI;
 
@@ -9,28 +9,6 @@ export const client = uri ? new MongoClient(uri) : null;
 let database;
 
 export const hashToken = token => crypto.createHash("sha256").update(token).digest("hex");
-
-export const isNewer = (incoming, current) => !current ||
-  incoming.updatedAt > current.updatedAt ||
-  (incoming.updatedAt === current.updatedAt && String(incoming.deviceId ?? "") > String(current.deviceId ?? ""));
-
-export function normalizeChanges(payload) {
-  const changes = Array.isArray(payload) ? payload : payload?.changes;
-  if (!Array.isArray(changes)) return [];
-
-  const latest = new Map();
-  for (const change of changes) {
-    const {col, rec} = change || {};
-    if (!COLLECTIONS.has(col) || !rec || typeof rec !== "object" || Array.isArray(rec) ||
-        typeof rec.id !== "string" || !rec.id || !Number.isSafeInteger(rec.updatedAt)) continue;
-    const deviceId = typeof rec.deviceId === "string" ? rec.deviceId : "";
-    const record = {...rec, deviceId};
-    const key = `${col}\u0000${record.id}`;
-    const current = latest.get(key);
-    if (!current || isNewer(record, current.rec)) latest.set(key, {col, rec:record});
-  }
-  return [...latest.values()];
-}
 
 function getDatabase() {
   if (!database) throw new Error("MongoDB no está conectado");
