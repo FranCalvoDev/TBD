@@ -40,6 +40,7 @@ export function createSelectors(store){
     routines: () => memo().routines,
     routine: id => store.get("routines", id),
     routinesOfTask: taskId => memo().routines.filter(r => r.taskId === taskId),
+    routinesOfBlock: blockId => memo().routines.filter(r => r.blockId === blockId),
     weeks: () => memo().weeks,
     week: key => store.get("weeks", key) || EMPTY_WEEK,
     curWeek: () => sel.week(sel.curKey()),

@@ -39,8 +39,8 @@ export function createHero(ctx){
     next.hidden = $("heroBar").hidden = empty && !cur;
     if (nx) { hero.style.setProperty("--next-c", catVar(nx.cat)); next.innerHTML = `Después: <b>${esc(nx.title)}</b> a las ${fmt(nx.s)}`; }
     else next.textContent = "No hay más bloques hoy.";
-    // Acceso directo a las rutinas de la tarea que toca ahora.
-    const routines = cur?.taskId ? sel.routinesOfTask(cur.taskId) : [];
+    // Acceso directo a las rutinas de la tarea o el bloque que toca ahora.
+    const routines = !cur ? [] : cur.taskId ? sel.routinesOfTask(cur.taskId) : sel.routinesOfBlock(cur.id);
     shortcuts.hidden = !routines.length;
     shortcuts.innerHTML = routines.map(r => `<button type="button" class="hero-rt" data-routine="${esc(r.id)}">Abrir rutina: ${esc(r.title)}</button>`).join("");
   };

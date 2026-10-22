@@ -8,3 +8,6 @@ dist/
 # Copias de seguridad personales: nunca al repositorio (es público)
 tbd-copia*.json
 *.tbd.json
+
+# Procesos y registros de tbd.ps1
+.tbd/

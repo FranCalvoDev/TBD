@@ -2,7 +2,7 @@
 // las secciones que dependen de las colecciones que cambiaron.
 const DEPS = {
   hero:        ["categories", "blocks", "tasks", "weeks", "routines"],
-  routines:    ["categories", "tasks", "routines"],
+  routines:    ["categories", "blocks", "tasks", "routines"],
   legend:      ["categories", "blocks"],
   week:        ["categories", "blocks", "tasks", "weeks"],
   mobile:      ["categories", "blocks", "tasks", "weeks"],

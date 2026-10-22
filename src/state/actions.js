@@ -66,7 +66,7 @@ export function createActions(store, sel){
         sel.tasks().filter(t => t.cat === id).length + sel.goals().filter(g => g.cat === id).length;
     },
 
-    /** data: {title, taskId ("" = sin tarea), rows:[{name, detail, amount}]} */
+    /** data: {title, taskId ("" = sin tarea), blockId ("" = sin bloque), rows:[{name, detail, amount}]} */
     saveRoutine(data, id){
       if (id) {
         const r = sel.routine(id); if (!r) return null;

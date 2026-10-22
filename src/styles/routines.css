@@ -20,20 +20,55 @@ section.folded .goals-head > :not(h2){display:none}
 .routine[open] summary::after{transform:rotate(225deg) translate(-2px,-2px)}
 .routine summary:active{background:var(--surface-2)}
 .rt-title{font-family:var(--display);font-weight:600;letter-spacing:-.015em;margin-right:4px}
-.rt-count{font-size:.8rem;color:var(--ink-3)}
-.rt-body{padding:0 16px 14px}
-.rt-act{display:flex;justify-content:flex-end;margin-top:4px}
+.rt-count{font-size:.8rem;color:var(--ink-3);font-family:var(--numeric);font-variant-numeric:tabular-nums}
+.rt-count.full{color:var(--accent-ink);font-weight:600}
+.rt-bar{flex:1 0 100%;height:4px;border-radius:2px;background:var(--surface-3);overflow:hidden}
+.rt-bar span{display:block;height:100%;background:var(--accent);transition:width .3s var(--ease)}
+.rt-body{padding:0 12px 12px}
+.rt-act{display:flex;justify-content:flex-end;gap:16px;margin-top:8px}
 .rt-empty{margin:6px 4px 10px;color:var(--ink-2)}
-.rt-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--line)}
-.rt{width:100%;border-collapse:collapse;font-size:.94rem;min-width:420px}
-.rt th,.rt td{padding:10px 14px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
-.rt thead th{background:var(--surface-2);color:var(--ink-2);font-size:.76rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
-.rt tbody tr + tr > *{border-top:1px solid var(--line)}
-.rt tbody tr:nth-child(even){background:var(--surface-2)}
-.rt tbody th{font-weight:600;color:var(--ink)}
-.rt td{color:var(--ink-2)}
-.rt .rt-n{width:1%;white-space:nowrap;color:var(--ink-3);font-variant-numeric:tabular-nums;text-align:right}
-.rt .rt-amt{white-space:nowrap;font-family:var(--numeric);font-variant-numeric:tabular-nums;color:var(--ink)}
+
+/* Filas de la rutina: una tarjeta por ejercicio */
+.rx-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.rx{display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;align-items:start;padding:12px;border-radius:var(--r-sm);background:var(--surface-2);transition:opacity .2s}
+.rx.rx-plain{grid-template-columns:minmax(0,1fr)}
+.rx-mark{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;border:1.5px solid var(--line-strong);background:var(--surface);
+  color:var(--ink);font-family:var(--numeric);font-weight:700;font-size:.82rem;letter-spacing:-.01em;cursor:pointer;transition:transform .15s var(--ease),background .15s}
+.rx-mark:active{transform:scale(.92)}
+.rx-mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.rx-mark.static{cursor:default;border-style:dashed}
+.rx.done .rx-mark{background:var(--accent-strong);border-color:var(--accent-strong);color:var(--on-accent);font-size:1.05rem}
+.rx.done .rx-main{opacity:.5}
+.rx.done .rx-name{text-decoration:line-through}
+.rx-main{min-width:0}
+.rx-head{display:flex;align-items:baseline;justify-content:space-between;gap:6px 12px;flex-wrap:wrap}
+.rx-name{font-weight:600;color:var(--ink);line-height:1.3;flex:1 1 9em;min-width:0;overflow-wrap:break-word}
+.rx-amt{font-family:var(--numeric);font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink);text-align:right;line-height:1.3;max-width:100%}
+.rx-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.rx-chip{font-family:var(--numeric);font-size:.76rem;font-weight:600;padding:3px 9px;border-radius:999px;line-height:1.35;
+  background:var(--surface-3);color:var(--ink-2)}
+.rx-chip.int{background:var(--accent-soft);color:var(--accent-ink)}
+.rx-chip.rest{background:color-mix(in srgb, var(--c1) 14%, transparent);color:var(--c1)}
+.rx-chip.rest::before{content:"⏱ "}
+.rx-chip.tempo{background:color-mix(in srgb, var(--c3) 15%, transparent);color:var(--c3)}
+.rx-note{margin:6px 0 0;font-size:.88rem;line-height:1.45;color:var(--ink-2)}
+.rx-chips + .rx-note{margin-top:8px}
+.rx-steps{margin:8px 0 0;padding-left:20px;font-size:.88rem;line-height:1.45;color:var(--ink-2)}
+.rx-steps li + li{margin-top:2px}
+.rx-steps li::marker{color:var(--ink-3);font-family:var(--numeric)}
+/* Aclaraciones: sin fondo, con borde */
+.rx.rx-tip{background:none;border:1px solid var(--line);padding:10px 12px}
+.rx-tip .rx-name{font-size:.9rem}
+/* Superseries: tarjetas unidas con una barra a la izquierda */
+.rx.ss{box-shadow:inset 3px 0 0 var(--accent)}
+.rx.ss-start{border-bottom-left-radius:0;border-bottom-right-radius:0}
+.rx.ss-mid,.rx.ss-end{margin-top:-6px;border-top:1px dashed var(--line-strong);border-top-left-radius:0;border-top-right-radius:0}
+.rx.ss-mid{border-bottom-left-radius:0;border-bottom-right-radius:0}
+.rx-ss{display:block;margin-bottom:4px;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink)}
+@media (max-width:620px){
+  .rt-body{padding:0 8px 10px}
+  .rx{gap:10px;padding:11px 10px}
+}
 
 /* Editor de rutinas */
 .rrows-head,.rrow{display:grid;grid-template-columns:1.2fr 1.6fr 1fr 40px;gap:8px;align-items:center}

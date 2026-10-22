@@ -7,7 +7,8 @@ export const KEYS = {
   server: "tbd:servidor",
   theme: "tbd:tema",
   notes: "tbd:notas",
-  folded: "tbd:plegadas"
+  folded: "tbd:plegadas",
+  routineDone: "tbd:rutinas-hechas"
 };
 
 // Claves de versiones anteriores: se leen una sola vez para migrar.

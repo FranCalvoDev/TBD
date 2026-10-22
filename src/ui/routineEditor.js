@@ -1,6 +1,8 @@
 // Crear y editar rutinas: nombre, tarea asociada (opcional) y filas de la tabla.
 import { $ } from "./dom.js";
 import { esc } from "../core/utils.js";
+import { fmt } from "../core/time.js";
+import { DAYS } from "../data/categories.js";
 
 const MAX_ROWS = 60;
 
@@ -22,13 +24,24 @@ export function createRoutineEditor(ctx){
       pending.map(t => `<option value="${esc(t.id)}"${t.id === selected ? " selected" : ""}>${esc(t.title)}</option>`).join("");
   }
 
+  function blockOptions(selected){
+    const known = [0,1,2,3,4,5,6].some(d => sel.blocksOf(d).some(x => x.id === selected));
+    return `<option value="">Sin bloque</option>` +
+      (selected && !known ? `<option value="${esc(selected)}" selected>(bloque eliminado)</option>` : "") +
+      DAYS.map((name, d) => {
+        const bs = sel.blocksOf(d); if (!bs.length) return "";
+        return `<optgroup label="${name}">${bs.map(x => `<option value="${esc(x.id)}"${x.id === selected ? " selected" : ""}>${fmt(x.s)} · ${esc(x.title)}</option>`).join("")}</optgroup>`;
+      }).join("");
+  }
+
   function open(id){
     editId = id || null;
-    const r = id ? sel.routine(id) : {title:"", taskId:"", rows:[{}, {}, {}]};
+    const r = id ? sel.routine(id) : {title:"", taskId:"", blockId:"", rows:[{}, {}, {}]};
     if (!r) return;
     $("rdTitle").textContent = id ? "Editar rutina" : "Nueva rutina";
     $("rTitle").value = r.title;
     $("rTask").innerHTML = taskOptions(r.taskId || "");
+    $("rBlock").innerHTML = blockOptions(r.blockId || "");
     rows.innerHTML = (Array.isArray(r.rows) && r.rows.length ? r.rows : [{}]).map(rowHtml).join("");
     $("rErr").textContent = "";
     $("rDel").style.visibility = id ? "visible" : "hidden";
@@ -53,7 +66,7 @@ export function createRoutineEditor(ctx){
     const data = [...rows.children].map(row => Object.fromEntries(
       [...row.querySelectorAll("input")].map(i => [i.dataset.f, i.value.trim()])
     )).filter(r => r.name || r.detail || r.amount);
-    act.saveRoutine({title, taskId:$("rTask").value, rows:data}, editId);
+    act.saveRoutine({title, taskId:$("rTask").value, blockId:$("rBlock").value, rows:data}, editId);
     dlg.close();
   });
   $("rCancel").addEventListener("click", () => dlg.close());
