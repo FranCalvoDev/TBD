@@ -6,7 +6,10 @@
 //   GET  /health  → {"ok": true}      (sin clave, para monitoreo)
 // Cada petición lleva «Authorization: Bearer <clave de acceso>»; las claves se crean con manage.js.
 import http from "node:http";
-import { pool, migrate, hashToken } from "./db.js";
+import {
+  closeDatabase, connectDatabase, findActiveUserByTokenHash, hashToken,
+  pullChanges, pushChanges
+} from "./db.js";
 
 const PORT = Number(process.env.PORT) || 8787;
 const MAX_BODY = 5 * 1024 * 1024; // 5 MB por lote
@@ -22,17 +25,10 @@ const send = (res, status, body) => {
   res.end(body === undefined ? undefined : JSON.stringify(body));
 };
 
-// Clave → usuario, con un caché corto para no consultar la base en cada petición.
-const cache = new Map();
 async function authenticate(req){
   const token = (req.headers.authorization || "").match(/^Bearer\s+(.+)$/i)?.[1]?.trim();
   if (!token) return null;
-  const hash = hashToken(token), hit = cache.get(hash);
-  if (hit && hit.until > Date.now()) return hit.user;
-  const {rows} = await pool.query("select id, name from tbd_users where token_hash = $1 and not revoked", [hash]);
-  const user = rows[0] || null;
-  cache.set(hash, {user, until:Date.now() + 30000});
-  return user;
+  return findActiveUserByTokenHash(hashToken(token));
 }
 
 async function readBody(req){
@@ -56,13 +52,15 @@ const server = http.createServer(async (req, res) => {
     if (path === "/changes" && req.method === "GET") {
       const since = url.searchParams.get("since");
       if (since !== null && !/^\d+$/.test(since)) return send(res, 400, {error:"Cursor inválido"});
-      const {rows} = await pool.query("select tbd_pull($1::uuid, $2::bigint) as r", [user.id, since]);
-      return send(res, 200, rows[0].r);
+      const cursor = since === null ? 0 : Number(since);
+      if (!Number.isSafeInteger(cursor)) return send(res, 400, {error:"Cursor inválido"});
+      return send(res, 200, await pullChanges(user._id, cursor));
     }
     if (path === "/changes" && req.method === "POST") {
       let body;
       try { body = JSON.parse(await readBody(req)); } catch (e) { return send(res, e.status || 400, {error:e.status ? "Lote demasiado grande" : "JSON inválido"}); }
-      await pool.query("select tbd_push($1::uuid, $2::jsonb)", [user.id, JSON.stringify(body)]);
+      if (!Array.isArray(body) && !Array.isArray(body?.changes)) return send(res, 400, {error:"Formato de cambios inválido"});
+      await pushChanges(user._id, body);
       return send(res, 204);
     }
     send(res, 404, {error:"No encontrado"});
@@ -72,7 +70,7 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-await migrate();
+await connectDatabase();
 server.listen(PORT, () => console.log(`TBD · servidor de sincronización escuchando en el puerto ${PORT}`));
-const stop = () => server.close(() => pool.end().then(() => process.exit(0)));
+const stop = () => server.close(() => closeDatabase().then(() => process.exit(0)));
 process.on("SIGTERM", stop); process.on("SIGINT", stop);

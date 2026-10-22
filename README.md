@@ -56,8 +56,7 @@ src/
   storage/            guardado local, migración de versiones viejas y sincronización con la base de datos
   ui/                 una pieza por sección de la pantalla; dibujan desde el estado y llaman acciones
 tests/                tests de Vitest para core, domain, state y storage
-selfhost/             servidor de sincronización autoalojado (Docker Compose, PostgreSQL, gestión de claves)
-sql/schema.sql        tablas y funciones de sincronización para PostgreSQL
+selfhost/             servidor de sincronización autoalojado (Docker Compose, MongoDB Atlas, gestión de claves)
 docs/AUTOALOJADO.md   guía paso a paso para levantar un servidor propio
 docs/BASE_DE_DATOS.md modelo de datos y contrato de sincronización
 ```

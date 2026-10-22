@@ -1,39 +1,22 @@
 # TBD · MiSemana — servidor de sincronización autoalojado.
 # Guía completa: docs/AUTOALOJADO.md
-#   cp .env.example .env      (y completar POSTGRES_PASSWORD)
+#   cp .env.example .env      (y completar MONGODB_URI)
 #   docker compose up -d
 #   docker compose exec servidor node manage.js add <nombre>
 name: tbd
 
 services:
-  db:
-    image: postgres:16-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: tbd
-      POSTGRES_USER: tbd
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Falta POSTGRES_PASSWORD en selfhost/.env}
-    volumes:
-      - datos:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U tbd -d tbd"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
-
   servidor:
     build:
       context: ..
       dockerfile: selfhost/Dockerfile
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgres://tbd:${POSTGRES_PASSWORD}@db:5432/tbd
+      MONGODB_URI: ${MONGODB_URI:?Falta MONGODB_URI en selfhost/.env}
+      MONGODB_DB: ${MONGODB_DB:-tbd}
       PORT: "8787"
     ports:
       - "${TBD_PORT:-8787}:8787"
-    depends_on:
-      db:
-        condition: service_healthy
 
   # Opcional: HTTPS automático con un dominio propio (docker compose --profile https up -d).
   https:
@@ -52,5 +35,4 @@ services:
       - servidor
 
 volumes:
-  datos:
   caddy-datos:

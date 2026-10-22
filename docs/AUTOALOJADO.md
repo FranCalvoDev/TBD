@@ -8,21 +8,22 @@ TBD funciona sin internet y guarda todo en cada dispositivo. Si un grupo (famili
 
 ```
  Teléfono de Ana ─┐
- Compu de Ana ────┼──►  Servidor TBD del grupo  (Docker: PostgreSQL + servidor de sincronización)
+ Compu de Ana ────┼──►  Servidor TBD (API) ───► MongoDB Atlas
  Teléfono de Beto ┘
 ```
 
-Todo lo necesario ya está en la carpeta [`selfhost/`](../selfhost). Solo falta lo que es propio de cada grupo: la contraseña de la base de datos, las claves de cada persona y, si se quiere, un dominio.
+El servidor HTTP de sincronización está en [`selfhost/`](../selfhost); MongoDB Atlas aloja los datos. La app nunca se conecta directamente a Atlas, y la URI de Atlas se mantiene solo en el servidor.
 
 ---
 
 ## Qué hace falta
 
-- Una máquina que quede **siempre encendida** con **Docker**:
+- Un clúster de MongoDB Atlas y un usuario de base de datos con permisos sobre la base que usarás.
+- Una máquina o servicio donde ejecutar el servidor HTTP con **Docker**:
   - Windows o Mac: [Docker Desktop](https://www.docker.com/products/docker-desktop/).
   - Linux o Raspberry Pi OS de 64 bits: Docker Engine con el plugin `compose`.
-- Unos 200 MB de memoria libres.
-- Que los teléfonos estén en la **misma red** que el servidor, o conectados por VPN (ver [Acceso fuera de casa](#acceso-fuera-de-casa)).
+- Que Atlas permita conexiones desde la dirección IP pública de salida de la máquina que ejecuta el servidor. En Atlas configura *Network Access* con esa IP; evita permitir todas las IP (`0.0.0.0/0`).
+- Que los dispositivos puedan alcanzar el servidor: por la **misma red**, VPN o dominio HTTPS (ver [Acceso fuera de casa](#acceso-fuera-de-casa)).
 
 ---
 
@@ -43,16 +44,11 @@ Sin git: descarga el ZIP desde GitHub (*Code → Download ZIP*), descomprímelo 
 cp .env.example .env
 ```
 
-Abre `.env` y completa `POSTGRES_PASSWORD` con una contraseña larga, solo letras y números. Para generar una:
+En Atlas, crea un clúster, un usuario de base de datos y agrega la IP de salida del servidor a *Network Access*. En *Connect → Drivers*, copia la URI de conexión. En `.env`, reemplaza el usuario, la contraseña y el host del ejemplo con los valores de Atlas; codifica en URL los caracteres especiales de usuario o contraseña. Define también el nombre de la base de datos si no quieres usar `tbd`.
 
-```bash
-openssl rand -hex 24                      # Linux / Mac
-```
-```powershell
--join (1..48 | % { '{0:x}' -f (Get-Random -Maximum 16) })   # Windows PowerShell
-```
+`MONGODB_URI` es un secreto: `.env` queda solo en esa máquina y nunca se sube al repositorio. No compartas esta URI con los usuarios de la app.
 
-`.env` queda solo en esa máquina: nunca se sube al repositorio.
+Esta versión no importa las tablas ni los usuarios del servidor PostgreSQL anterior. Crea de nuevo las claves de acceso en Atlas; los registros locales de cada dispositivo siguen en el dispositivo y se pueden volver a sincronizar al conectarlo.
 
 ### 3. Arrancar
 
@@ -60,14 +56,14 @@ openssl rand -hex 24                      # Linux / Mac
 docker compose up -d
 ```
 
-La primera vez tarda un par de minutos (descarga y construye las imágenes). Para comprobar que funciona:
+La primera vez descarga y construye la imagen del servidor. Para comprobar que funciona:
 
 ```bash
-docker compose ps                         # «db» y «servidor» deben decir «Up»
+docker compose ps                         # «servidor» debe decir «Up»
 curl http://localhost:8787/health         # responde {"ok":true}
 ```
 
-El servidor arranca solo cada vez que se enciende la máquina.
+El servidor crea los índices MongoDB necesarios al arrancar y vuelve a iniciarse automáticamente con Docker.
 
 ### 4. Crear una clave para cada persona
 
@@ -142,17 +138,9 @@ Todos los comandos se ejecutan dentro de `selfhost/`:
 
 Un bloqueo o una clave nueva se aplican en menos de 30 segundos.
 
-### Copias de seguridad del servidor
+### Copias de seguridad
 
-```bash
-# Guardar
-docker compose exec -T db pg_dump -U tbd tbd > copia-servidor-$(date +%F).sql
-
-# Restaurar (sobre una instalación nueva, con el servidor ya arrancado)
-docker compose exec -T db psql -U tbd -d tbd < copia-servidor-AAAA-MM-DD.sql
-```
-
-Guarda esas copias fuera de la máquina. Además, cada persona puede exportar su propia copia desde la app (**Tus datos → Exportar copia**).
+Configura y verifica las copias de seguridad del clúster desde Atlas (o usa `mongodump`/`mongorestore` con las credenciales de respaldo). Guarda las copias fuera del clúster. Además, cada persona puede exportar su propia copia desde la app (**Tus datos → Exportar copia**).
 
 ---
 
@@ -160,7 +148,7 @@ Guarda esas copias fuera de la máquina. Además, cada persona puede exportar su
 
 - Las claves se guardan en la base de datos solo como hash (SHA-256): quien vea la base no puede leerlas.
 - Cada clave da acceso únicamente a los datos de su persona.
-- `.env`, las claves y las copias nunca van al repositorio (`.gitignore` ya los excluye).
+- La URI de Atlas en `.env`, las claves y las copias nunca van al repositorio (`.gitignore` ya los excluye).
 - La app de Android admite `http://` para servidores en la red de casa o por VPN. Para acceso por internet usa siempre HTTPS (opción B) o Tailscale (opción A).
 
 ---
@@ -172,4 +160,5 @@ Guarda esas copias fuera de la máquina. Además, cada persona puede exportar su
 | «No se pudo conectar con el servidor» | Que el teléfono esté en la misma red (o con Tailscale encendido), que la IP sea la correcta y que el firewall permita el puerto 8787. Desde el teléfono, abre `http://<IP>:8787/health` en el navegador: debe mostrar `{"ok":true}`. |
 | «La clave de acceso no es válida o fue bloqueada» | Que la clave esté completa (empieza con `tbd_`). Si hace falta, genera otra con `new-key`. |
 | «No parece un servidor TBD» | La dirección responde, pero es otro servicio: revisa el puerto. |
-| `docker compose up` dice «Falta POSTGRES_PASSWORD» | Falta completar `.env` (paso 2). |
+| `docker compose up` dice «Falta MONGODB_URI» | Falta completar `.env` con la URI del clúster Atlas (paso 2). |
+| El servidor no inicia o Atlas rechaza la conexión | Revisa que la URI y el usuario de base de datos sean correctos, que la contraseña esté codificada en URL y que *Network Access* permita la IP de salida del servidor. |

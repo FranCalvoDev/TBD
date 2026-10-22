@@ -30,7 +30,7 @@ Cuando llegan dos versiones del mismo registro gana la de `updatedAt` mayor; si 
 ## Configuración
 
 - La app no trae direcciones ni claves. Cada dispositivo guarda su propio servidor (dirección, clave y nombre) en `localStorage` (`tbd:servidor`); no se sincroniza ni entra en las copias de seguridad.
-- El servidor lee su configuración de `selfhost/.env` (contraseña de la base, puerto y dominio). Ese archivo nunca se sube al repositorio.
+- El servidor lee `MONGODB_URI`, `MONGODB_DB`, el puerto y el dominio de `selfhost/.env`. La URI y las credenciales solo se usan en el servidor; nunca se incluyen en la app ni se suben al repositorio.
 
 ## Contrato de la API
 
@@ -49,28 +49,19 @@ POST /changes  {"changes": [...]}  → 204
 
 `src/storage/memoryRemote.js` implementa este mismo comportamiento en memoria y los tests de `tests/storage.test.js` lo usan como servidor: sirve de especificación ejecutable.
 
-## Esquema para PostgreSQL
+## Persistencia MongoDB
 
-El script listo para ejecutar está en [`sql/schema.sql`](../sql/schema.sql) (PostgreSQL 13 o superior):
+El servidor de [`selfhost/`](../selfhost/) usa el driver oficial de MongoDB y se conecta a Atlas mediante `MONGODB_URI`. En MongoDB se guardan documentos en tres colecciones:
 
-```bash
-psql "$DATABASE_URL" -f sql/schema.sql
-```
+| Colección | Documento y propósito |
+|---|---|
+| `users` | `{_id, name, tokenHash, createdAt, revoked}`. Guarda solo el hash SHA-256 de cada clave; `name` y `tokenHash` tienen índices únicos. |
+| `records` | `{userId, col, recordId, data, updatedAt, deviceId, deleted, seq}`. Un documento por registro de app, con índice único `{userId, col, recordId}`. `data` conserva el registro de la app como documento BSON. |
+| `counters` | `{_id: "changes", value}`. Contador secuencial que proporciona cursores crecientes. |
 
-Crea las tablas `tbd_users` (personas y hash de sus claves) y `tbd_records`, y dos funciones que implementan el contrato de arriba, así la API solo tiene que llamarlas:
+Al arrancar, el servidor crea los índices requeridos con `createIndex`; no hace falta ejecutar scripts ni configurar tablas manualmente. `records` contiene la versión ganadora más reciente de cada registro. Cada escritura aceptada actualiza ese documento y el contador dentro de una transacción, así se conserva el cursor y la regla de conflictos. La base de datos de Atlas debe admitir transacciones (los clústeres Atlas las admiten).
 
-| Endpoint | Consulta | Respuesta |
-|---|---|---|
-| `GET /changes?since=<cursor>` | `select tbd_pull($1::uuid, $2::bigint)` | el JSON tal cual: `{"changes": [...], "cursor": n}` |
-| `POST /changes` | `select tbd_push($1::uuid, $2::jsonb)` con el cuerpo recibido | `204` |
-
-`$1` es el id del usuario sacado del token de sesión, nunca del cuerpo de la petición.
-
-Qué resuelve el script:
-- Aplica la misma regla de conflictos que la app (compara `deviceId` igual que JavaScript, con `collate "C"`).
-- Si un lote trae el mismo registro dos veces, se queda con el más nuevo en vez de fallar.
-- Ignora colecciones desconocidas o registros sin `id` sin rechazar el resto del lote.
-- Se puede volver a ejecutar sin perder datos.
+El usuario asociado se obtiene de la clave de acceso, nunca del cuerpo de la petición. El servidor valida `col`, `id` y `updatedAt`, ignora entradas inválidas y usa la misma regla de conflictos que la app. La app se conecta únicamente al servidor HTTP: **no pongas la URI ni credenciales de Atlas en el cliente**.
 
 ## Otros servidores
 
