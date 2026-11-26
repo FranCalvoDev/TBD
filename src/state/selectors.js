@@ -1,6 +1,7 @@
 // Lecturas derivadas del store. Se recalculan solo cuando cambia store.version.
 import { toMin, currentWeekKey } from "../core/time.js";
 import { computePlanned } from "../domain/schedule.js";
+import { DEFAULT_SETTINGS } from "../data/nutrition.js";
 
 const EMPTY_WEEK = Object.freeze({done:{}, off:{}, goals:{}});
 const byStart = (a, b) => toMin(a.s) - toMin(b.s);
@@ -20,7 +21,9 @@ export function createSelectors(store){
         goals: store.list("goals").sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
         tasks: store.list("tasks"),
         routines: store.list("routines").sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
-        weeks: store.list("weeks").sort((a, b) => a.id < b.id ? -1 : 1)
+        weeks: store.list("weeks").sort((a, b) => a.id < b.id ? -1 : 1),
+        nutritionDays: store.list("nutrition").filter(r => r.date).sort((a, b) => a.date < b.date ? -1 : 1),
+        nutritionWeeks: store.list("nutrition").filter(r => r.week).sort((a, b) => a.week < b.week ? -1 : 1)
       };
     }
     return cache;
@@ -45,6 +48,12 @@ export function createSelectors(store){
     week: key => store.get("weeks", key) || EMPTY_WEEK,
     curWeek: () => sel.week(sel.curKey()),
     hasWeek: key => !!store.get("weeks", key),
+    // Nutrición: un registro de ajustes ("settings"), uno por día ("d2026-11-26") y uno por semana ("w2026-S48").
+    nutrition: () => ({...DEFAULT_SETTINGS, ...store.get("nutrition", "settings")}),
+    nutritionDay: iso => store.get("nutrition", "d" + iso),
+    nutritionDays: () => memo().nutritionDays,
+    nutritionWeek: key => store.get("nutrition", "w" + key),
+    nutritionWeeks: () => memo().nutritionWeeks,
     tasksAt: (week, day, includeDone = false) =>
       memo().tasks.filter(t => t.slot && t.slot.week === week && t.slot.day === day && (includeDone || !t.done))
   };
