@@ -1,4 +1,4 @@
-const COLLECTIONS = new Set(["categories", "blocks", "goals", "tasks", "weeks", "routines"]);
+const COLLECTIONS = new Set(["categories", "blocks", "goals", "tasks", "weeks", "routines", "nutrition"]);
 export const MAX_CHANGES_PER_BATCH = 2000;
 
 export const isNewer = (incoming, current) => !current ||

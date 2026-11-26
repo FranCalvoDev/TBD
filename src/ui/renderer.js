@@ -10,7 +10,9 @@ const DEPS = {
   tasks:       ["categories", "blocks", "tasks", "weeks"],
   goals:       ["categories", "goals", "weeks"],
   stats:       ["categories", "blocks", "goals", "tasks", "weeks"],
-  categories:  ["categories"]
+  categories:  ["categories"],
+  nutriCard:   ["categories", "blocks", "nutrition"],
+  nutrition:   ["categories", "blocks", "nutrition"]
 };
 
 export function createRenderer(sections){

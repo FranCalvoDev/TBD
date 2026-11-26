@@ -34,6 +34,13 @@ npm run build     # versión final en dist/ (se puede subir tal cual a GitHub Pa
 - **Tareas**: tareas únicas con tiempo estimado, categoría y fecha límite. La app sugiere huecos libres o bloques liberados y las agenda en la grilla.
 - **Metas de la semana**: contadores editables; cada lunes empieza una semana nueva.
 - **Estadísticas**: cumplimiento por semana y por día, horas por área, metas y tareas completadas.
+- **Nutrición**: plan de comidas calculado desde el perfil de cada persona (peso, altura, edad, sexo y actividad).
+  - Acceso directo bajo «Ahora» con la próxima comida, sus cantidades y la proteína y calorías del día.
+  - Plan diario según el tipo de día (entrenamiento, descanso o partido), con horarios que se acomodan a los bloques de la semana, cantidades en gramos y macros por comida. Cada alimento se puede cambiar por uno equivalente.
+  - Tres estrategias (volumen limpio, recomposición, definición) con objetivos en g/kg, y un ajuste fino de ±150 kcal.
+  - Hábitos del día (proteína, comidas, creatina, agua, sueño, peso en ayunas), cintura y fotos por semana, rachas.
+  - Progreso: peso con promedio de 7 días, resumen semanal y qué ajustar cada 2 semanas, con el mantenimiento real estimado.
+  - Guía de horarios, día de partido, equivalencias, suplementos con respaldo y fuentes.
 - **Tus datos**: exportar e importar una copia de seguridad (archivo JSON). En Android se comparte a Drive, correo o Archivos; en el navegador se descarga.
 - **Sincronizar con tu servidor**: opcional; se conectan los dispositivos con una dirección y una clave de acceso.
 - Tema claro/oscuro.
@@ -51,7 +58,7 @@ src/
   styles/             CSS por sección (tokens y temas, grilla, tareas, metas, diálogos…)
   data/               días, paleta de colores y categorías iniciales genéricas
   core/               utilidades sin dependencias: tiempo, reloj, escape de HTML, localStorage seguro
-  domain/             reglas de negocio puras (sin DOM): huecos libres, sugerencias, validación, estadísticas
+  domain/             reglas de negocio puras (sin DOM): huecos libres, sugerencias, validación, estadísticas, nutrición
   state/              store con registros versionados, selectores memorizados y acciones (todas las escrituras)
   storage/            guardado local, migración de versiones viejas y sincronización con la base de datos
   ui/                 una pieza por sección de la pantalla; dibujan desde el estado y llaman acciones
@@ -90,7 +97,7 @@ El repositorio es público, así que **no contiene datos de nadie**: ni rutinas,
 
 ## Datos y sincronización
 
-Los datos se guardan como registros en cinco colecciones: `categories`, `blocks`, `goals`, `tasks` y `weeks`. Cada registro tiene `updatedAt` y `deviceId`, y borrar deja una lápida, así los dispositivos se sincronizan resolviendo conflictos registro por registro.
+Los datos se guardan como registros en siete colecciones: `categories`, `blocks`, `goals`, `tasks`, `weeks`, `routines` y `nutrition` (ajustes y perfil, un registro por día y uno por semana). Cada registro tiene `updatedAt` y `deviceId`, y borrar deja una lápida, así los dispositivos se sincronizan resolviendo conflictos registro por registro.
 
 - **Sin servidor** (lo predeterminado): todo queda en el dispositivo y se comparte entre pestañas del navegador.
 - **Con un servidor propio**: se crea una clave por persona con `selfhost/manage.js` y se completan la dirección y la clave en *Tus datos → Sincronizar con tu servidor*. Los cambios se encolan y se suben al volver la conexión.

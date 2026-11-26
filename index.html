@@ -19,6 +19,7 @@
 
   <nav class="quicknav" id="quicknav" aria-label="Accesos directos">
     <a href="#hero">Ahora</a>
+    <a href="#nutricion">Nutrición</a>
     <a href="#semana">Semana</a>
     <a href="#tareas">Tareas, metas y notas</a>
     <a href="#rutinas">Rutinas</a>
@@ -34,6 +35,8 @@
     <div class="hero-routines" id="heroRoutines" hidden></div>
   </div>
 
+  <div class="ncard" id="nutriCard" aria-label="Nutrición de hoy"></div>
+
   <section id="semana" style="margin-top:0">
     <h2>Semana tipo</h2>
     <p class="sub">Toca un bloque para ver sus tips, marcarlo como hecho o editarlo. Toca una categoría para resaltarla.</p>
@@ -48,6 +51,124 @@
     <div class="mobile">
       <div class="tabs" id="tabs" role="tablist"></div>
       <div class="list" id="list"></div>
+    </div>
+  </section>
+
+  <section id="nutricion">
+    <h2>Nutrición</h2>
+    <p class="sub">Qué comer, cuánto y a qué hora para bajar grasa sin perder músculo o ganar músculo sin sumar grasa, con el seguimiento que indica cuándo ajustar.</p>
+    <div id="nSetup" hidden></div>
+    <div id="nMain" hidden>
+      <div class="njump" role="navigation" aria-label="Secciones de Nutrición">
+        <button type="button" data-n="jump" data-to="nHero">Hoy</button>
+        <button type="button" data-n="jump" data-to="nComidas">Comidas</button>
+        <button type="button" data-n="jump" data-to="nHabitos">Hábitos</button>
+        <button type="button" data-n="jump" data-to="nProgreso">Progreso</button>
+        <button type="button" data-n="jump" data-to="nEstrategia">Estrategia</button>
+        <button type="button" data-n="jump" data-to="nGuia">Cuándo comer</button>
+        <button type="button" data-n="jump" data-to="nEquiv">Equivalencias</button>
+        <button type="button" data-n="jump" data-to="nSupl">Suplementos</button>
+      </div>
+      <div class="nhero" id="nHero"></div>
+
+      <div class="nblock" id="nComidas">
+        <div class="goals-head"><h3 class="nh3">Comidas del día</h3><div id="nMenuSwitch"></div></div>
+        <p class="sub" id="nMealsSub"></p>
+        <div class="meals" id="nMeals"></div>
+        <div class="extras" id="nExtras"></div>
+      </div>
+
+      <div class="nblock" id="nHabitos">
+        <h3 class="nh3">Hábitos de hoy</h3>
+        <p class="sub">Lo que más pesa en el resultado. Marca o escribe cada uno; se guarda solo.</p>
+        <div class="habits" id="nHabits"></div>
+        <p class="streaks" id="nStreaks"></p>
+      </div>
+
+      <div class="nblock" id="nProgreso">
+        <h3 class="nh3">Progreso</h3>
+        <p class="sub">Promedios semanales de peso y cintura, y qué cambiar cada 2 semanas según tu estrategia.</p>
+        <div id="nProgress"></div>
+      </div>
+
+      <div class="nblock" id="nEstrategia">
+        <h3 class="nh3">Estrategia y objetivos</h3>
+        <p class="sub">Tus calorías y macros salen de tu gasto estimado y de la estrategia que elijas según tu grasa corporal.</p>
+        <div id="nStrategy"></div>
+      </div>
+
+      <div class="nblock" id="nGuia">
+        <h3 class="nh3">Cuándo comer</h3>
+        <p class="sub">Para el músculo manda el total del día; el horario suma rendimiento y recuperación.</p>
+        <div class="gcards">
+          <div class="gcard"><h4>Proteína repartida</h4><p>4 o 5 comidas, separadas cada 3 a 5 horas, con 0,4 a 0,55 g de proteína por kg en cada una<span data-gk="0.4-0.55"></span>.</p></div>
+          <div class="gcard"><h4>Antes de entrenar</h4><p>1 a 2 horas antes: 20-40 g de proteína y 50-80 g de carbohidratos, con poca grasa y poca fibra.</p><p class="hs">Si comiste bien 2 o 3 horas antes, no hace falta un batido.</p></div>
+          <div class="gcard"><h4>Después de entrenar</h4><p>Dentro de las 2 horas: proteína con carbohidratos, en tu comida normal.</p><p class="hs">No hay que correr a tomar nada apenas terminas.</p></div>
+          <div class="gcard"><h4>Antes de dormir</h4><p>30-40 g de proteína lenta: yogur alto en proteína, ricota o queso untable descremado.</p><p class="hs">Sirve para completar el total del día; no es mágico.</p></div>
+        </div>
+        <h4 class="h4s">Día de partido</h4>
+        <div class="tw"><table class="ntable"><thead><tr><th>Cuándo</th><th>Qué</th><th>Cantidad</th></tr></thead><tbody>
+          <tr><td>3-4 h antes</td><td>Comida rica en carbohidratos, con poca grasa y poca fibra (fideos con pollo)</td><td>1-2 g de carbohidratos por kg<span data-gk="1-2"></span></td></tr>
+          <tr><td>60-90 min antes</td><td>Algo fácil: pan con dulce de leche, banana</td><td>50-75 g de carbohidratos</td></tr>
+          <tr><td>2 h antes</td><td>Agua</td><td>Unos 500 ml</td></tr>
+          <tr><td>Durante (más de 1 h)</td><td>Agua y bebida deportiva con sodio</td><td>Sorbos regulares; 30-60 g de carbohidratos por hora si es exigente</td></tr>
+          <tr><td>Dentro de 1-2 h después</td><td>Comida completa y bien salada</td><td>0,8 g de carbohidratos por kg<span data-gk="0.8"></span> y 0,4 g de proteína por kg<span data-gk="0.4"></span></td></tr>
+          <tr><td>Rehidratación</td><td>Pésate antes y después del partido</td><td>1,5 L por cada kg perdido, con sodio</td></tr>
+        </tbody></table></div>
+        <div class="gcards">
+          <div class="gcard"><h4>Hidratación y sodio</h4><p>Durante el día, apunta a orina clara. El sodio que se pierde con el sudor va de 175 a 1.500 mg por litro según la persona.</p><p>Si terminas con la ropa blanca de sal o con calambres, sala un poco más la comida previa y usa bebida con electrolitos.</p></div>
+          <div class="gcard"><h4>Si juegas dos días seguidos</h4><p>Repite el esquema del día de partido los dos días: marca los dos como Partido arriba.</p></div>
+        </div>
+      </div>
+
+      <div class="nblock" id="nEquiv">
+        <h3 class="nh3">Equivalencias</h3>
+        <p class="sub">Cambia un alimento por otro del mismo grupo sin romper los macros. En el plan, toca cualquier alimento para hacerlo directo.</p>
+        <div class="data-card" id="nEquivCalc"></div>
+        <div id="nEquivTables"></div>
+        <div class="gcards">
+          <div class="gcard"><h4>Cortes grasos</h4><p>Vacío, asado de tira, matambre, carne picada común y embutidos traen mucha más grasa por gramo de proteína. Cuéntalos como una porción de proteína más 2 o 3 de grasa.</p></div>
+          <div class="gcard"><h4>Verduras y frutas</h4><p>Las verduras sin almidón (lechuga, tomate, zanahoria, zapallito, brócoli, acelga, morrón) son casi libres: 200 g suman 40-50 kcal.</p><p>Fruta: 2 o 3 por día de estación, con 20-25 g de carbohidratos cada una.</p></div>
+        </div>
+      </div>
+
+      <div class="nblock" id="nSupl">
+        <h3 class="nh3">Suplementos</h3>
+        <p class="sub">Solo los que tienen respaldo. Ninguno reemplaza comer la proteína del plan.</p>
+        <div class="tw"><table class="ntable"><thead><tr><th>Suplemento</th><th>Dosis</th><th>Evidencia</th><th>Para qué</th></tr></thead><tbody>
+          <tr><td><b>Creatina monohidrato</b></td><td>3-5 g por día, todos los días, a cualquier hora</td><td>Alta</td><td>Más rendimiento en esfuerzos intensos y más masa magra. Al principio suma alrededor de 1 kg de agua dentro del músculo: tenlo en cuenta al mirar la balanza.</td></tr>
+          <tr><td><b>Proteína whey</b></td><td>1 scoop (unos 25 g de proteína) solo si no llegas con comida</td><td>Alta como fuente de proteína</td><td>Comodidad: no agrega nada si ya cumples el total diario.</td></tr>
+          <tr><td><b>Cafeína</b></td><td>3 mg por kg<span data-gk="3" data-unit="mg"></span>, 60 min antes de entrenar o jugar; tope de 6 mg por kg</td><td>Alta</td><td>Más fuerza, sprints y saltos. Evítala de noche: el sueño vale más.</td></tr>
+          <tr><td><b>Vitamina D</b></td><td>Solo si un análisis de 25(OH)D sale bajo, con la dosis que indique el médico</td><td>Condicional</td><td>Vale la pena medirla si en invierno tomas poco sol.</td></tr>
+        </tbody></table></div>
+        <p class="ndisc"><b>No valen la pena:</b> BCAA, glutamina, quemadores de grasa, boosters de testosterona (tribulus), CLA, L-carnitina, ZMA y ganadores de peso. En vez de un ganador de peso, avena con leche, banana y maní.</p>
+        <details class="ntips"><summary>Consejos prácticos</summary><div class="ntips-body">
+          <p><b>Meal prep.</b> Dos veces por semana, cocina 1 a 1,5 kg de pollo o carne magra, 400-500 g de arroz crudo, una bandeja de papas y batatas al horno y 6 a 8 huevos duros. Pesa en crudo y reparte en tuppers.</p>
+          <p><b>Asado.</b> Prioriza lomo, peceto, colita de cuadril, pollo o pechito de cerdo desgrasado. Los embutidos son muy densos en grasa: pruébalos sin hacer base de eso, y suma ensaladas y pan o papa.</p>
+          <p><b>Comer afuera.</b> Carne o pollo a la plancha con papa o arroz y ensalada. Pizza o empanadas: 2 o 3 porciones en un día libre, anotadas en Fuera del plan.</p>
+          <p><b>Alcohol.</b> Aporta 7 kcal por gramo y reduce la síntesis de proteína muscular después del ejercicio. Si tomas, 1 o 2 medidas, lejos del post-partido.</p>
+          <p><b>Sueño.</b> 7 a 9 horas. Con el mismo déficit, dormir poco hace perder menos grasa y casi el doble de masa magra.</p>
+          <p><b>Sostenerlo.</b> Cumplir el 80-90 % de las comidas alcanza. Repetir 2 o 3 desayunos y 3 o 4 cenas de base lo hace mucho más fácil.</p>
+        </div></details>
+        <details class="ntips"><summary>Fuentes</summary><div class="ntips-body"><ul class="srcs">
+          <li><a href="https://doi.org/10.1186/s12970-017-0177-8" target="_blank" rel="noopener">Jäger et al. 2017 · Posición del ISSN sobre proteína y ejercicio</a></li>
+          <li><a href="https://doi.org/10.1136/bjsports-2017-097608" target="_blank" rel="noopener">Morton et al. 2018 · Metaanálisis de proteína y masa muscular</a></li>
+          <li><a href="https://doi.org/10.3945/ajcn.115.119339" target="_blank" rel="noopener">Longland et al. 2016 · Proteína alta en déficit</a></li>
+          <li><a href="https://doi.org/10.1186/1550-2783-11-20" target="_blank" rel="noopener">Helms et al. 2014 · Recomendaciones para culturismo natural</a></li>
+          <li><a href="https://pubmed.ncbi.nlm.nih.gov/31247944/" target="_blank" rel="noopener">Iraki et al. 2019 · Tamaño del superávit fuera de temporada</a></li>
+          <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10620361/" target="_blank" rel="noopener">Helms et al. 2023 · Superávit de 5 % frente a 15 %</a></li>
+          <li><a href="https://doi.org/10.1519/SSC.0000000000000584" target="_blank" rel="noopener">Barakat et al. 2020 · Recomposición corporal en entrenados</a></li>
+          <li><a href="https://doi.org/10.1249/MSS.0000000000000852" target="_blank" rel="noopener">Thomas, Erdman y Burke 2016 · Posición ACSM, AND y Dietitians of Canada</a></li>
+          <li><a href="https://doi.org/10.1186/s12970-018-0215-1" target="_blank" rel="noopener">Schoenfeld y Aragon 2018 · Proteína por comida</a></li>
+          <li><a href="https://doi.org/10.1016/j.jada.2005.02.005" target="_blank" rel="noopener">Frankenfield et al. 2005 · Precisión de Mifflin-St Jeor</a></li>
+          <li><a href="https://doi.org/10.1186/s12970-017-0173-z" target="_blank" rel="noopener">Kreider et al. 2017 · Posición del ISSN sobre creatina</a></li>
+          <li><a href="https://doi.org/10.1186/s12970-020-00383-4" target="_blank" rel="noopener">Guest et al. 2021 · Posición del ISSN sobre cafeína</a></li>
+          <li><a href="https://pubmed.ncbi.nlm.nih.gov/20921542/" target="_blank" rel="noopener">Nedeltcheva et al. 2010 · Sueño y pérdida de grasa</a></li>
+          <li><a href="https://doi.org/10.1371/journal.pone.0088384" target="_blank" rel="noopener">Parr et al. 2014 · Alcohol y síntesis de proteína muscular</a></li>
+          <li><a href="https://www.argenfood.unlu.edu.ar/Tablas/Grupo/Carnes.pdf" target="_blank" rel="noopener">ARGENFOODS (UNLu) · Tabla de composición de alimentos</a></li>
+        </ul></div></details>
+        <p class="ndisc">Es una guía general basada en evidencia y no reemplaza a un nutricionista matriculado. Los valores de los alimentos son aproximados: revisa las etiquetas.</p>
+      </div>
     </div>
   </section>
 
@@ -216,6 +337,32 @@
   <div class="dlg-head"><div class="dc">Personaliza tu semana</div><h3>Categorías</h3><div class="dt">Ponles nombre y color. Los cambios se guardan solos.</div></div>
   <div class="dlg-body"><div class="cat-list" id="catList"></div><button class="link-btn" id="catAdd" type="button">+ Nueva categoría</button></div>
   <div class="dlg-foot"><span class="spacer"></span><button class="btn primary" id="catDone" type="button">Listo</button></div>
+</dialog>
+
+<dialog id="nSwap">
+  <div class="dlg-head"><div class="dc">Cambiar alimento</div><h3 id="swTitle"></h3><div class="dt" id="swSub"></div></div>
+  <div class="dlg-body" id="swBody"></div>
+  <div class="dlg-foot"><button class="btn ghost" id="swUndo" type="button">Volver al original</button><span class="spacer"></span><button class="btn" id="swClose" type="button">Cerrar</button></div>
+</dialog>
+
+<dialog id="nTime">
+  <div class="dlg-head"><div class="dc">Horario de la comida</div><h3 id="tmTitle"></h3><div class="dt" id="tmSub"></div></div>
+  <div class="dlg-body form"><label>Hora<input type="time" id="tmIn" step="300"></label></div>
+  <div class="dlg-foot"><button class="btn ghost" id="tmReset" type="button">Usar la hora sugerida</button><span class="spacer"></span><button class="btn" id="tmCancel" type="button">Cancelar</button><button class="btn primary" id="tmSave" type="button">Guardar</button></div>
+</dialog>
+
+<dialog id="nExtra">
+  <div class="dlg-head"><div class="dc">Fuera del plan</div><h3>¿Qué comiste?</h3></div>
+  <div class="dlg-body form">
+    <label>Alimento<select id="exFood"></select></label>
+    <div id="exGrams"><label>Cantidad en gramos<input type="number" id="exG" min="1" step="5" inputmode="decimal"></label><p class="hs" id="exPrev"></p></div>
+    <div id="exFree">
+      <label>Qué fue<input id="exName" maxlength="60" autocomplete="off" placeholder="Por ejemplo: 2 porciones de pizza"></label>
+      <div class="two"><label>Calorías<input type="number" id="exK" min="0" step="10" inputmode="numeric"></label><label>Proteína (g)<input type="number" id="exP" min="0" step="1" inputmode="numeric"></label></div>
+    </div>
+    <p class="err" id="exErr" role="alert"></p>
+  </div>
+  <div class="dlg-foot"><span class="spacer"></span><button class="btn" id="exCancel" type="button">Cancelar</button><button class="btn primary" id="exSave" type="button">Agregar</button></div>
 </dialog>
 
 <dialog id="conf">

@@ -104,6 +104,18 @@ export function createActions(store, sel){
       }
       store.commit([{col:"tasks", rec:t}, ...ops]);
     },
+    /* ---------- nutrición ---------- */
+    updateNutrition(patch){ store.put("nutrition", {...sel.nutrition(), ...patch, id:"settings"}); },
+    /** `fn` recibe una copia del registro del día y la modifica. */
+    updateNutritionDay(date, fn){
+      const d = clone(sel.nutritionDay(date) || {id:"d"+date, date});
+      fn(d); store.put("nutrition", {...d, id:"d"+date, date});
+    },
+    updateNutritionWeek(week, fn){
+      const w = clone(sel.nutritionWeek(week) || {id:"w"+week, week});
+      fn(w); store.put("nutrition", {...w, id:"w"+week, week});
+    },
+
     scheduleTask(id, slot){ const t = sel.task(id); if (t) store.put("tasks", {...t, slot}); },
     unscheduleTask(id){ const t = clone(sel.task(id)); if (t) { delete t.slot; store.put("tasks", t); } },
     /** Ubica una tarea en el horario que dejó libre un bloque hecho o dado de baja. */

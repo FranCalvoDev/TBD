@@ -12,6 +12,7 @@ import "./styles/goals.css";
 import "./styles/stats.css";
 import "./styles/dialogs.css";
 import "./styles/routines.css";
+import "./styles/nutrition.css";
 
 import { nowInfo, currentWeekKey } from "./core/time.js";
 import { initData } from "./storage/index.js";
@@ -31,6 +32,7 @@ import { createTaskEditor } from "./ui/taskEditor.js";
 import { createStats } from "./ui/stats.js";
 import { createRoutines } from "./ui/routines.js";
 import { createRoutineEditor } from "./ui/routineEditor.js";
+import { createNutrition } from "./ui/nutrition.js";
 import { initCollapsible } from "./ui/collapsible.js";
 import { createCategoryEditor } from "./ui/categoryEditor.js";
 import { setCategories } from "./state/categories.js";
@@ -62,6 +64,7 @@ const taskEditor = createTaskEditor(ctx);
 const categoryEditor = createCategoryEditor(ctx);
 const routines = createRoutines(ctx);
 const routineEditor = createRoutineEditor(ctx);
+const nutrition = createNutrition(ctx);
 Object.assign(ctx.open, {block:blockDialog.open, editor:blockEditor.open, taskEditor:taskEditor.open, goToTask:tasks.goTo, categories:categoryEditor.open, routine:routines.goTo, routineEditor:routineEditor.open});
 Object.assign(sections, {
   hero: createHero(ctx),
@@ -73,7 +76,9 @@ Object.assign(sections, {
   routines: routines.render,
   goals: createGoals(ctx),
   stats: createStats(ctx),
-  categories: categoryEditor.render
+  categories: categoryEditor.render,
+  nutriCard: nutrition.renderCard,
+  nutrition: nutrition.render
 });
 
 bindWeekControls(ctx);
@@ -102,6 +107,7 @@ function tick(){
   const names = ["hero"];
   if (view.selDay === info.day) names.push("mobile");
   if (!taskEditor.isOpen()) names.push("tasks");
+  names.push(nutrition.isBusy() ? "nutriCard" : "nutrition");
   renderer.invalidate(names);
 }
 setTimeout(() => { tick(); setInterval(tick, 60000); }, 60000 - Date.now() % 60000 + 50);
